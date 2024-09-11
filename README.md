@@ -6,6 +6,8 @@
 
 In this phase, the focus is on implementing the Crowdsourced Ideation Solution (CIS) API, which extends the functionality established in Phase 1. This phase aims to develop and integrate a modern API for the CIS platform, allowing users to create topics, submit ideas, and vote on them. The solution must seamlessly interact with the legacy system via the user API created in Phase 1; the primary goal is to ensure that the CIS API is robust, functional, and aligned with the overall project objectives while providing a user-friendly interface for interacting with topics and ideas.
 
+![phase2.png](public/img/phase2.png)
+
 ## Prerequisites
 
 ---
