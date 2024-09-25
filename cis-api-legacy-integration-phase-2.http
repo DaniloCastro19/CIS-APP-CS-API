@@ -1,0 +1,6 @@
+@cis_api_legacy_integration_phase_2_HostAddress = http://localhost:5141
+
+GET {{cis_api_legacy_integration_phase_2_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
