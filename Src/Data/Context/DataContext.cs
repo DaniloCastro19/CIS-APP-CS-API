@@ -11,6 +11,7 @@ public class DataContext:DbContext
         Database.EnsureCreated();
     }
 
-    public DbSet<TopicModel> Topic { get; set;}
+    public DbSet<Topic> Topic { get; set;}
+    public DbSet<User> User { get; set;}
 
 }
