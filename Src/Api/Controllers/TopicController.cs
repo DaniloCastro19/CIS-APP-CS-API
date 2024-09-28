@@ -1,5 +1,6 @@
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -9,26 +10,26 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TopicController:ControllerBase
+    public class TopicController : ControllerBase
     {
-        private readonly IRepositoryGeneric<Topic> _repository;
+        private readonly TopicService _topicService;
 
-        public TopicController(IRepositoryGeneric<Topic> repository)
+        public TopicController(TopicService topicService)
         {
-            _repository = repository;
+            _topicService = topicService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult<IEnumerable<Topic>>> GetAllTopics()
         {
-            var data = await _repository.GetAll();
-            return Ok(data);
+            var topics = await _topicService.GetAllTopics();
+            return Ok(topics);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetTopicById(Guid id)
+        public async Task<ActionResult<Topic>> GetTopicById(Guid id)
         {
-            var topic = await _repository.GetByID(id);
+            var topic = await _topicService.GetTopicById(id);
             if (topic == null)
             {
                 return NotFound();
@@ -37,33 +38,23 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateTopic([FromBody] TopicDTO newTopicDto)
+        public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var newTopic = TopicDTO.ToCompleteTopic(newTopicDto);
-
-            var createdTopic = await _repository.Insert(newTopic);
+            var newTopic = TopicDTO.ToCompleteTopic(topicDTO);
+            var createdTopic = await _topicService.CreateTopic(newTopic);
             return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTopic(Guid id, [FromBody] TopicDTO updatedTopicDto)
+        public async Task<IActionResult> UpdateTopic(Guid id, [FromBody] TopicDTO topicDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var updatedTopic = TopicDTO.ToCompleteTopic(updatedTopicDto);
+            var updatedTopic = TopicDTO.ToCompleteTopic(topicDTO);
             updatedTopic.Id = id;
             try
             {
-                await _repository.Update(updatedTopic);
+                await _topicService.UpdateTopic(updatedTopic);
             }
-            catch (KeyNotFoundException)
+            catch(KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -71,17 +62,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTopic(Guid id)
+        public async Task<IActionResult> DeleteTopic(Guid id)
         {
-            var topic = await _repository.GetByID(id);
+            var topic = await _topicService.DeleteTopic(id);
             if (topic == null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
             return NoContent();
         }
     }
-
 }
