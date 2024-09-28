@@ -10,6 +10,8 @@ public partial class Topic
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Title { get; set; } = null!;
+
+    public string? Description { get; set; } = null!;
     
     public DateOnly? Creation_date { get; set; } = null!;
 
