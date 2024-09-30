@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 
-public partial class Topic
+public class Topic
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    public string Title { get; set; } = null!;
-
-    public string? Description { get; set; } = null!;
+    public string Id { get; set; }         
+    public string Title { get; set; }     
+    public string Description { get; set; } 
+    public DateTime CreationDate { get; set; } 
+    public String UsersId { get; set; }     
     
-    public DateOnly? Creation_date { get; set; } = null!;
-
-    [JsonIgnore]
-    public string? UserId { get; set; } = null!;
-
-    [JsonIgnore]
-    [IgnoreDataMember]
-    public virtual User User { get; set; } = null!;
-
+    public User User { get; set; }
 }
