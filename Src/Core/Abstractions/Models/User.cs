@@ -10,4 +10,5 @@ public partial class User
     public string Password { get; set; } 
 
     public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
+    public ICollection<Idea> Ideas { get; set; } = new List<Idea>();
 }

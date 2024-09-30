@@ -14,6 +14,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Topic> Topics { get; set; }
+        public DbSet<Idea> Ideas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,25 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.HasOne(t => t.User)  
                     .WithMany(u => u.Topics) 
                     .HasForeignKey(t => t.UsersId) 
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+            
+            modelBuilder.Entity<Idea>(entity =>
+            {
+                entity.ToTable("ideas");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasMaxLength(36).IsRequired();
+                entity.Property(e => e.Content).HasMaxLength(2000);
+                entity.Property(e => e.CreationDate).IsRequired();
+
+                entity.HasOne(i => i.User)
+                    .WithMany(u => u.Ideas) // Asegúrate de que la relación esté configurada en el modelo User
+                    .HasForeignKey(i => i.UsersId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(i => i.Topic)
+                    .WithMany(t => t.Ideas) // Asegúrate de que la relación esté configurada en el modelo Topic
+                    .HasForeignKey(i => i.TopicsId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 

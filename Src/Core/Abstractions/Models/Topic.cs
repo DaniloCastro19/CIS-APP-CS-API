@@ -15,4 +15,6 @@ public class Topic
     public String UsersId { get; set; }     
     
     public User User { get; set; }
+    
+    public ICollection<Idea> Ideas { get; set; } = new List<Idea>();
 }
