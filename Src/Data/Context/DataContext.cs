@@ -52,12 +52,12 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.CreationDate).IsRequired();
 
                 entity.HasOne(i => i.User)
-                    .WithMany(u => u.Ideas) // Asegúrate de que la relación esté configurada en el modelo User
+                    .WithMany(u => u.Ideas) 
                     .HasForeignKey(i => i.UsersId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(i => i.Topic)
-                    .WithMany(t => t.Ideas) // Asegúrate de que la relación esté configurada en el modelo Topic
+                    .WithMany(t => t.Ideas) 
                     .HasForeignKey(i => i.TopicsId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
