@@ -9,9 +9,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
     {
         private readonly DataContext _context;
 
-        public TopicRepository(DataContext context)
+        public TopicRepository(DataContext DataContext)
         {
-            _context = context;
+            _context = DataContext;
         }
 
         private DbSet<Topic> EntitySet => _context.Set<Topic>();

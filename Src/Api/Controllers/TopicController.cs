@@ -10,29 +10,29 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
     [ApiController]
     public class TopicController : ControllerBase
     {
-        private readonly TopicService _topicService;
+        private readonly TopicService _TopicService;
 
-        public TopicController(TopicService topicService)
+        public TopicController(TopicService TopicService)
         {
-            _topicService = topicService;
+            _TopicService = TopicService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Topic>>> GetAllTopics()
         {
-            var topics = await _topicService.GetAllTopics();
-            return Ok(topics);
+            var Topics = await _TopicService.GetAllTopics();
+            return Ok(Topics);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Topic>> GetTopicById(Guid id) 
         {
-            var topic = await _topicService.GetTopicById(id);
-            if (topic == null)
+            var Topic = await _TopicService.GetTopicById(id);
+            if (Topic == null)
             {
                 return NotFound();
             }
-            return Ok(topic);
+            return Ok(Topic);
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
                 UsersId = topicDTO.UsersId 
             };
 
-            var createdTopic = await _topicService.CreateTopic(newTopic);
+            var createdTopic = await _TopicService.CreateTopic(newTopic);
             return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
         }
 
@@ -58,7 +58,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             {
                 return BadRequest("Invalid UUID format");
             }
-            var existingTopic = await _topicService.GetTopicById(topicId);
+            var existingTopic = await _TopicService.GetTopicById(topicId);
             if (existingTopic == null)
             {
                 return NotFound();
@@ -68,7 +68,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             existingTopic.CreationDate = topicDTO.CreationDate ?? existingTopic.CreationDate;
             try
             {
-                await _topicService.UpdateTopic(existingTopic);
+                await _TopicService.UpdateTopic(existingTopic);
             }
             catch (KeyNotFoundException)
             {
@@ -80,7 +80,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTopic(Guid id) 
         {
-            var topic = await _topicService.DeleteTopic(id); 
+            var topic = await _TopicService.DeleteTopic(id); 
             if (topic == null)
             {
                 return NotFound();
