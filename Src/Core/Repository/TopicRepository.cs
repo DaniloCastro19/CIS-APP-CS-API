@@ -1,27 +1,26 @@
 ﻿using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
-using cis_api_legacy_integration_phase_2.Src.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 {
     public class TopicRepository : ITopicRepository
     {
-        private readonly DataContext _context;
+        private readonly Sd3Context _sd3Context;
 
-        public TopicRepository(DataContext context)
+        public TopicRepository(Sd3Context sd3Context)
         {
-            _context = context;
+            _sd3Context = sd3Context;
         }
 
-        private DbSet<Topic> EntitySet => _context.Set<Topic>();
+        private DbSet<Topic> EntitySet => _sd3Context.Set<Topic>();
 
         public async Task<IEnumerable<Topic>> GetAll()
         {
             return await EntitySet.ToListAsync();
         }
 
-        public async Task<Topic> GetByID(Guid id)
+        public async Task<Topic> GetByID(string id)
         {
             return await EntitySet.FindAsync(id);
         }
@@ -35,11 +34,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task Update(Topic entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+            _sd3Context.Entry(entity).State = EntityState.Modified;
             await Save();
         }
 
-        public async Task<Topic> Delete(Guid id)
+        public async Task<Topic> Delete(string id)
         {
             var entity = await GetByID(id);
             if (entity != null)
@@ -62,7 +61,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task Save()
         {
-            await _context.SaveChangesAsync();
+            await _sd3Context.SaveChangesAsync();
         }
     }
 }

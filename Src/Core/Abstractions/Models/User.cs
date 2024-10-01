@@ -13,5 +13,9 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public virtual ICollection<Topic>? Topic { get; set; } = new List<Topic>();
+    public virtual ICollection<Idea> Ideas { get; set; } = new List<Idea>();
+
+    public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
+
+    public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }

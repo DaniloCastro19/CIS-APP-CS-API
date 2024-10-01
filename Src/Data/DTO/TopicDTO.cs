@@ -10,19 +10,19 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.DTO
         public string Title { get; set; } = null!;
 
         public string? Description { get; set; }
-        public string? Creation_date { get; set; }
+        public string? CreationDate { get; set; }
 
-        public string? UserId { get; set; }
+        public string UsersId { get; set; }
 
-        public static Topic ToCompleteTopic(TopicDTO topicDto)
+        public static Topic ToCompleteTopic(TopicDTO TopicDto)
         {
             return new Topic
             {
-                Id = Guid.NewGuid(),
-                Title = topicDto.Title,
-                Description = topicDto.Description,
-                Creation_date = topicDto.Creation_date != null ? DateOnly.Parse(topicDto.Creation_date) : null,
-                UserId = topicDto.UserId
+                Id = Guid.NewGuid().ToString(),
+                Title = TopicDto.Title,
+                Description = TopicDto.Description,
+                CreationDate = TopicDto.CreationDate != null ? DateOnly.Parse(TopicDto.CreationDate) : DateOnly.MinValue,
+                UsersId = TopicDto.UsersId
             };
         }
     }

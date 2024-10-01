@@ -1,43 +1,42 @@
 using System;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
-using cis_api_legacy_integration_phase_2.Src.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Services
 {
     public class TopicService
     {
-        private readonly ITopicRepository _topicRepository;
+        private readonly ITopicRepository _TopicRepository;
 
-        public TopicService(ITopicRepository topicRepository)
+        public TopicService(ITopicRepository TopicRepository)
         {
-            _topicRepository = topicRepository;
+            _TopicRepository = TopicRepository;
         }
 
         public async Task<IEnumerable<Topic>> GetAllTopics()
         {
-            return await _topicRepository.GetAll();
+            return await _TopicRepository.GetAll();
         }
 
-        public async Task<Topic> GetTopicById(Guid id)
+        public async Task<Topic> GetTopicById(string id)
         {
-            return await _topicRepository.GetByID(id);
+            return await _TopicRepository.GetByID(id);
         }
 
-        public async Task<Topic> CreateTopic(Topic topic)
+        public async Task<Topic> CreateTopic(Topic Topic)
         {
-            return await _topicRepository.Insert(topic);
+            return await _TopicRepository.Insert(Topic);
         }
 
-        public async Task UpdateTopic(Topic topic)
+        public async Task UpdateTopic(Topic Topic)
         {
-            await _topicRepository.Update(topic);
+            await _TopicRepository.Update(Topic);
         }
 
-        public async Task<Topic> DeleteTopic(Guid id)
+        public async Task<Topic> DeleteTopic(string id)
         {
-            return await _topicRepository.Delete(id);
+            return await _TopicRepository.Delete(id);
         }
     }
 }
