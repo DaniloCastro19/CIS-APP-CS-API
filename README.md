@@ -16,3 +16,20 @@ In this phase, the focus is on implementing the Crowdsourced Ideation Solution (
 - The Java-based user API must be functional and integrated with the existing system to support interactions with the CIS API.
 - The existing database schema must be extended to accommodate topics and ideas, ensuring proper data storage and retrieval.
 - A simple client application must be available for testing and validating the CIS API operations, including CRUD functionality for topics and ideas.
+
+## Execute API in code first
+### Steps for run code C#
+### step 1
+Modify the environment variables for the database in the appsetting.json file
+```
+"MySqlConnection": "server={HOST};port={PORT};database={NAME-DATABASE};uid={USERNAME};password={PASSWORD};"
+```
+### step 2
+Run the command for nuget package manager
+```
+Update-Database
+```
+or in console
+```
+dotnet ef database update
+```
