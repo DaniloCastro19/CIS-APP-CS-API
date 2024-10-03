@@ -3,7 +3,6 @@ using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
@@ -26,7 +25,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet("{id}")]
+<<<<<<< HEAD
         public async Task<ActionResult<Topic>> GetTopicById(string id)
+=======
+        public async Task<ActionResult<Topic>> GetTopicById(Guid id) 
+>>>>>>> 7eb89777f17c4deaf67b66b75d5448588440f5a1
         {
             var Topic = await _TopicService.GetTopicById(id);
             if (Topic == null)
@@ -39,21 +42,48 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO TopicDTO)
         {
+<<<<<<< HEAD
             var newTopic = TopicDTO.ToCompleteTopic(TopicDTO);
             var createdTopic = await _TopicService.CreateTopic(newTopic);
+=======
+            var newTopic = new Topic
+            {
+                Id = Guid.NewGuid().ToString(), 
+                Title = topicDTO.Title,
+                Description = topicDTO.Description,
+                CreationDate = DateTime.UtcNow, 
+                UsersId = topicDTO.UsersId 
+            };
+
+            var createdTopic = await _topicService.CreateTopic(newTopic);
+>>>>>>> 7eb89777f17c4deaf67b66b75d5448588440f5a1
             return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
         }
 
         [HttpPut("{id}")]
+<<<<<<< HEAD
         public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO TopicDTO)
         {
             var updatedTopic = TopicDTO.ToCompleteTopic(TopicDTO);
             updatedTopic.Id = id;
+=======
+        public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO topicDTO) 
+        {
+            var updatedTopic = new Topic
+            {
+                Id = id, 
+                Title = topicDTO.Title,
+                Description = topicDTO.Description,
+                CreationDate = DateTime.UtcNow,
+                UsersId = topicDTO.UsersId 
+            };
+
+>>>>>>> 7eb89777f17c4deaf67b66b75d5448588440f5a1
             try
             {
                 await _TopicService.UpdateTopic(updatedTopic);
             }
-            catch(KeyNotFoundException)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -61,10 +91,17 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+<<<<<<< HEAD
         public async Task<IActionResult> DeleteTopic(string id)
         {
             var Topic = await _TopicService.DeleteTopic(id);
             if (Topic == null)
+=======
+        public async Task<IActionResult> DeleteTopic(Guid id) 
+        {
+            var topic = await _topicService.DeleteTopic(id); 
+            if (topic == null)
+>>>>>>> 7eb89777f17c4deaf67b66b75d5448588440f5a1
             {
                 return NotFound();
             }

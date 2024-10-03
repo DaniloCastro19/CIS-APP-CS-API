@@ -19,7 +19,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _TopicRepository.GetAll();
         }
 
+<<<<<<< HEAD
         public async Task<Topic> GetTopicById(string id)
+=======
+        public async Task<Topic?> GetTopicById(Guid id)
+>>>>>>> 7eb89777f17c4deaf67b66b75d5448588440f5a1
         {
             return await _TopicRepository.GetByID(id);
         }
