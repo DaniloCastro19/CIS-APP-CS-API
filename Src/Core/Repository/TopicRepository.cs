@@ -23,7 +23,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<Topic> GetByID(Guid id)
         {
-            return await EntitySet.FindAsync(id);
+            String userId = id.ToString();
+            return await EntitySet.FindAsync(userId);
         }
 
         public async Task<Topic> Insert(Topic entity)
