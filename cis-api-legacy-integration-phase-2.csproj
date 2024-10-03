@@ -23,4 +23,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tests\Controller\" />
+    <Folder Include="Tests\Repository\" />
+    <Folder Include="Tests\Services\" />
+  </ItemGroup>
+
 </Project>
