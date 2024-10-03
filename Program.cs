@@ -16,10 +16,13 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Registra los repositorios y servicios necesarios
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
+builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 builder.Services.AddScoped<TopicService>();
 builder.Services.AddScoped<IdeaService>(); 
+builder.Services.AddScoped<VoteService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
+builder.Services.AddScoped<VoteController>();
 
 // Agrega servicios para controladores
 builder.Services.AddControllers();
