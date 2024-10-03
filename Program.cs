@@ -30,10 +30,13 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Registry necessary repositories and services
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
+builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 builder.Services.AddScoped<ITopicService,TopicService>();
 builder.Services.AddScoped<IIdeaService, IdeaService>();
+builder.Services.AddScoped<VoteService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
+builder.Services.AddScoped<VoteController>();
 
 // Adding ValidatorsDTO
 builder.Services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
