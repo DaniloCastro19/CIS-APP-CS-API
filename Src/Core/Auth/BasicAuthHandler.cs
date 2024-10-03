@@ -35,14 +35,7 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
         string username = credentials[0];
         string password = credentials[1];
 
-        LoginDTO loginData = new LoginDTO{
-            Login = username,
-            Password = password,
-        };
-        //var loginDataToJson = JsonSerializer.Serialize(loginData);
-
-        //var requestBody = new StringContent(loginDataToJson, Encoding.UTF8, "application/json");
-        var (successLogin, userId) = await _usersAPIClient.Login(username,password);
+        var successLogin = await _usersAPIClient.Login(username, password);
          
         if (!successLogin) return AuthenticateResult.Fail("Unauthorized. User not found.");
         
