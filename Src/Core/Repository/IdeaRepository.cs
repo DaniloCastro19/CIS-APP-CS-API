@@ -16,7 +16,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<Idea?> GetByID(Guid id) 
         {
-            return await EntitySet.FindAsync(id.ToString()); 
+            string ideaId = id.ToString();
+            return await EntitySet.FindAsync(ideaId); 
         }
 
         public async Task<Idea> Insert(Idea entity)

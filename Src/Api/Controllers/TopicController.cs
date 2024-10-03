@@ -52,26 +52,29 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO topicDTO) 
+        public async Task<IActionResult> UpdateTopic(string id, [FromBody] UpdateTopicDTO topicDTO) 
         {
-            var updatedTopic = new Topic
+            if (!Guid.TryParse(id, out Guid topicId))
             {
-                Id = id, 
-                Title = topicDTO.Title,
-                Description = topicDTO.Description,
-                CreationDate = DateTime.UtcNow,
-                UsersId = topicDTO.UsersId 
-            };
-
+                return BadRequest("Invalid UUID format");
+            }
+            var existingTopic = await _topicService.GetTopicById(topicId);
+            if (existingTopic == null)
+            {
+                return NotFound();
+            }
+            existingTopic.Title = topicDTO.Title ?? existingTopic.Title;
+            existingTopic.Description = topicDTO.Description ?? existingTopic.Description;
+            existingTopic.CreationDate = topicDTO.CreationDate ?? existingTopic.CreationDate;
             try
             {
-                await _topicService.UpdateTopic(updatedTopic);
+                await _topicService.UpdateTopic(existingTopic);
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(existingTopic);
         }
 
         [HttpDelete("{id}")]
