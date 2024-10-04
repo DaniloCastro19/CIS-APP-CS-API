@@ -8,4 +8,5 @@ public interface ITopicService: IService<Topic, TopicDTO>
     Task<IEnumerable<Topic>> GetByTitle(string title);
     Task<IEnumerable<Topic>> GetByUser(Guid userId);
     Task<int> CountTopics();
+    Task ValidateOwnership(Guid topicId, string userId);
 }
