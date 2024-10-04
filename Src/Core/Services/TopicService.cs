@@ -73,5 +73,20 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             var id = userId.ToString();
             return await _topicRepository.GetByUser(id);
         }
+
+        public async Task ValidateOwnership(Guid topicId, string userId)
+        {
+            var topic = await GetByID(topicId);
+            if (topic == null)
+            {
+                throw new KeyNotFoundException("Topic not found.");
+            }
+
+            if (topic.UsersId != userId)
+            {
+                throw new UnauthorizedAccessException("You are not allowed to delete a topic you didn't create.");
+            }
+
+        }
     }
 }
