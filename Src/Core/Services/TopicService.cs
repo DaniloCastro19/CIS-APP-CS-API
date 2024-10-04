@@ -2,11 +2,13 @@ using System;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
+using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Services
 {
-    public class TopicService
+    public class TopicService: ITopicService
     {
         private readonly ITopicRepository _topicRepository;
 
@@ -15,29 +17,61 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             _topicRepository = topicRepository;
         }
 
-        public async Task<IEnumerable<Topic>> GetAllTopics()
+        public async Task<IEnumerable<Topic>> GetByTitle(string title)
+        {
+            return await _topicRepository.GetByTitle(title);
+        }
+
+        public async Task<int> CountTopics()
+        {
+            return await _topicRepository.CountTopics();
+        }
+
+        public async Task<IEnumerable<Topic>> GetAll()
         {
             return await _topicRepository.GetAll();
         }
 
-        public async Task<Topic> GetTopicById(Guid id)
+        public async Task<Topic> GetByID(Guid id)
         {
             return await _topicRepository.GetByID(id);
         }
 
-        public async Task<Topic> CreateTopic(Topic topic)
+        public async Task<Topic> Create(TopicDTO entity, string userId)
         {
-            return await _topicRepository.Insert(topic);
+            var newTopic = new Topic
+            {
+                Id = Guid.NewGuid().ToString(), 
+                Title = entity.Title,
+                Description = entity.Description,
+                CreationDate = DateTime.UtcNow, 
+                UsersId = userId
+            };
+            return await _topicRepository.Insert(newTopic);
         }
 
-        public async Task UpdateTopic(Topic topic)
+        public async Task Update(TopicDTO entity, string userId, string topicId)
         {
-            await _topicRepository.Update(topic);
+            var newTopic = new Topic
+            {
+                Id = topicId, 
+                Title = entity.Title,
+                Description = entity.Description,
+                CreationDate = DateTime.UtcNow, 
+                UsersId = userId
+            };
+            await _topicRepository.Update(newTopic);
         }
 
-        public async Task<Topic> DeleteTopic(Guid id)
+        public async Task Delete(Guid id)
         {
-            return await _topicRepository.Delete(id);
+            await _topicRepository.Delete(id);
+        }
+
+        public async Task<IEnumerable<Topic>> GetByUser(Guid userId)
+        {
+            var id = userId.ToString();
+            return await _topicRepository.GetByUser(id);
         }
     }
 }

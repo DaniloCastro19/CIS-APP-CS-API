@@ -32,13 +32,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
             await Save();
         }
 
-        public async Task<Idea?> Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             var entity = await GetByID(id);
-            if (entity == null) return entity;
             EntitySet.Remove(entity);
             await Save();
-            return entity;
         }
 
         public async Task<IEnumerable<Idea>> GetByContent(string content)

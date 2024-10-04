@@ -28,9 +28,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             await ideaRepository.Update(idea);
         }
 
-        public async Task<Idea?> DeleteIdea(Guid id)
+        public async Task DeleteIdea(Guid id)
         {
-            return await ideaRepository.Delete(id);
+            await ideaRepository.Delete(id);
         }
     }
 }

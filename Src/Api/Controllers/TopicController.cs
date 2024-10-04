@@ -1,18 +1,20 @@
+using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
-using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TopicController : ControllerBase
     {
-        private readonly TopicService _topicService;
+        private readonly ITopicService _topicService;
 
-        public TopicController(TopicService topicService)
+        public TopicController(ITopicService topicService)
         {
             _topicService = topicService;
         }
@@ -20,14 +22,14 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Topic>>> GetAllTopics()
         {
-            var topics = await _topicService.GetAllTopics();
+            var topics = await _topicService.GetAll();
             return Ok(topics);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Topic>> GetTopicById(Guid id) 
         {
-            var topic = await _topicService.GetTopicById(id);
+            var topic = await _topicService.GetByID(id);
             if (topic == null)
             {
                 return NotFound();
@@ -35,37 +37,33 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(topic);
         }
 
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult<IEnumerable<Topic>>> GetByUser(Guid id)
+        {
+            var topics = await _topicService.GetByUser(id);
+            if (topics == null)
+            {
+                return NotFound();
+            }
+            return Ok(topics);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
-            var newTopic = new Topic
-            {
-                Id = Guid.NewGuid().ToString(), 
-                Title = topicDTO.Title,
-                Description = topicDTO.Description,
-                CreationDate = DateTime.UtcNow, 
-                UsersId = topicDTO.UsersId 
-            };
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var createdTopic = await _topicService.Create(topicDTO, userId);
 
-            var createdTopic = await _topicService.CreateTopic(newTopic);
-            return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
+            return Ok(createdTopic);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO topicDTO) 
         {
-            var updatedTopic = new Topic
-            {
-                Id = id, 
-                Title = topicDTO.Title,
-                Description = topicDTO.Description,
-                CreationDate = DateTime.UtcNow,
-                UsersId = topicDTO.UsersId 
-            };
-
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
-                await _topicService.UpdateTopic(updatedTopic);
+                await _topicService.Update(topicDTO, userId, id);
             }
             catch (KeyNotFoundException)
             {
@@ -77,8 +75,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTopic(Guid id) 
         {
-            var topic = await _topicService.DeleteTopic(id); 
-            if (topic == null)
+            try
+            {
+                await _topicService.Delete(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
