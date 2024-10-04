@@ -67,5 +67,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
         {
             await _topicRepository.Delete(id);
         }
+
+        public async Task<IEnumerable<Topic>> GetByUser(Guid userId)
+        {
+            var id = userId.ToString();
+            return await _topicRepository.GetByUser(id);
+        }
     }
 }

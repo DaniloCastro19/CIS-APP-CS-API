@@ -64,5 +64,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Topic>> GetByUser(string userId)
+        {
+            return await EntitySet.Where(topic => topic.UsersId == userId).ToListAsync();
+        }
     }
 }

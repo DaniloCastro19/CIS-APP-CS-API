@@ -37,6 +37,17 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(topic);
         }
 
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult<IEnumerable<Topic>>> GetByUser(Guid id)
+        {
+            var topics = await _topicService.GetByUser(id);
+            if (topics == null)
+            {
+                return NotFound();
+            }
+            return Ok(topics);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
