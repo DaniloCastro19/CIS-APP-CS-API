@@ -12,7 +12,7 @@ public class Topic
     public string Title { get; set; }     
     public string Description { get; set; } 
     public DateTime CreationDate { get; set; } 
-    public String UsersId { get; set; }     
+    public string UsersId { get; set; }     
     
     public User User { get; set; }
     
