@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
@@ -39,34 +40,19 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
-            var newTopic = new Topic
-            {
-                Id = Guid.NewGuid().ToString(), 
-                Title = topicDTO.Title,
-                Description = topicDTO.Description,
-                CreationDate = DateTime.UtcNow, 
-                UsersId = topicDTO.UsersId 
-            };
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var createdTopic = await _topicService.Create(topicDTO, userId);
 
-            var createdTopic = await _topicService.Create(newTopic);
-            return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
+            return Ok(createdTopic);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO topicDTO) 
         {
-            var updatedTopic = new Topic
-            {
-                Id = id, 
-                Title = topicDTO.Title,
-                Description = topicDTO.Description,
-                CreationDate = DateTime.UtcNow,
-                UsersId = topicDTO.UsersId 
-            };
-
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
-                await _topicService.Update(updatedTopic);
+                await _topicService.Update(topicDTO, userId, id);
             }
             catch (KeyNotFoundException)
             {
@@ -78,8 +64,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTopic(Guid id) 
         {
-            var topic = await _topicService.Delete(id); 
-            if (topic == null)
+            try
+            {
+                await _topicService.Delete(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }

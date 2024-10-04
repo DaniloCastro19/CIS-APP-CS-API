@@ -2,6 +2,8 @@ using System;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
+using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Services
@@ -35,19 +37,35 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _topicRepository.GetByID(id);
         }
 
-        public async Task<Topic> Create(Topic entity)
+        public async Task<Topic> Create(TopicDTO entity, string userId)
         {
-            return await _topicRepository.Insert(entity);
+            var newTopic = new Topic
+            {
+                Id = Guid.NewGuid().ToString(), 
+                Title = entity.Title,
+                Description = entity.Description,
+                CreationDate = DateTime.UtcNow, 
+                UsersId = userId
+            };
+            return await _topicRepository.Insert(newTopic);
         }
 
-        public async Task Update(Topic entity)
+        public async Task Update(TopicDTO entity, string userId, string topicId)
         {
-            await _topicRepository.Update(entity);
+            var newTopic = new Topic
+            {
+                Id = topicId, 
+                Title = entity.Title,
+                Description = entity.Description,
+                CreationDate = DateTime.UtcNow, 
+                UsersId = userId
+            };
+            await _topicRepository.Update(newTopic);
         }
 
-        public async Task<Topic> Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            return await _topicRepository.Delete(id);
+            await _topicRepository.Delete(id);
         }
     }
 }

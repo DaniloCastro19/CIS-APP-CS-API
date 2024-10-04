@@ -23,7 +23,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<Topic> GetByID(Guid id)
         {
-            String userId = id.ToString();
+            string userId = id.ToString();
             return await EntitySet.FindAsync(userId);
         }
 
@@ -40,7 +40,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
             await Save();
         }
 
-        public async Task<Topic> Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             var entity = await GetByID(id);
             if (entity != null)
@@ -48,7 +48,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
                 EntitySet.Remove(entity);
                 await Save();
             }
-            return entity;
         }
 
         public async Task<IEnumerable<Topic>> GetByTitle(string title)

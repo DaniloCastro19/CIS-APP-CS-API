@@ -35,11 +35,10 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
         string username = credentials[0];
         string password = credentials[1];
 
-        var successLogin = await _usersAPIClient.Login(username, password);
-         
+        var (successLogin, userId) = await _usersAPIClient.Login(username, password);
         if (!successLogin) return AuthenticateResult.Fail("Unauthorized. User not found.");
         
-        var claims = new [] {new Claim(ClaimTypes.NameIdentifier, username)};
+        var claims = new [] {new Claim(ClaimTypes.NameIdentifier, userId)};
         var identity = new ClaimsIdentity(claims, "Basic");
         var claimsPrincipal = new ClaimsPrincipal(identity);
         return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));

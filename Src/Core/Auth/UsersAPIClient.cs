@@ -9,7 +9,7 @@ public class UsersAPIClient
     private readonly HttpClient _httpClient = new();
 
 
-    public async Task<bool> Login(string username, string password)
+    public async Task<(bool successLogin, string userId)> Login(string username, string password)
     {
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("login", username);
@@ -17,12 +17,13 @@ public class UsersAPIClient
         try
         {
             var response = await _httpClient.GetAsync(Constants.LOGIN_ENDPOINT);
-            if (!response.IsSuccessStatusCode) return false;
-            return true;
+            if (!response.IsSuccessStatusCode) return (false, "");
+            var userId = await response.Content.ReadAsStringAsync();
+            return (true, userId);
         }
         catch (Exception)
         {
-            return false;
+            return (false, "");
         }
     }
 }

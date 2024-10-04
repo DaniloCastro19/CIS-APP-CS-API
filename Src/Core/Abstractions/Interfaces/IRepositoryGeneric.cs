@@ -9,7 +9,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces
         Task<T> GetByID(Guid id);
         Task<T> Insert(T entity);
         Task Update(T entity);
-        Task<T> Delete(Guid id);
+        Task Delete(Guid id);
         Task Save();
     }
 }

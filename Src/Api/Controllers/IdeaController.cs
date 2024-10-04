@@ -79,11 +79,14 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var idea = await _ideaService.DeleteIdea(id);
-            if (idea == null)
+            try{
+                await _ideaService.DeleteIdea(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
+
             return NoContent();
         }
     }
