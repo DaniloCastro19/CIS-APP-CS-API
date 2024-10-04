@@ -1,6 +1,5 @@
 using cis_api_legacy_integration_phase_2.Src.Api.Controllers;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
-using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Auth;
 using cis_api_legacy_integration_phase_2.Src.Core.Repository;
 using cis_api_legacy_integration_phase_2.Src.Core.Services;
@@ -19,7 +18,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Registry necessary reposirtories and services
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
-builder.Services.AddScoped<TopicService>();
+builder.Services.AddScoped<ITopicService,TopicService>();
 builder.Services.AddScoped<IdeaService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
