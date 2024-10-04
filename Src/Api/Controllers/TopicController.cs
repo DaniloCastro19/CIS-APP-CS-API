@@ -25,7 +25,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Topic>> GetTopicById(Guid id) 
+        public async Task<ActionResult<Topic>> GetTopicById(Guid id)
         {
             var Topic = await _TopicService.GetTopicById(id);
             if (Topic == null)
@@ -78,10 +78,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTopic(Guid id) 
+        public async Task<IActionResult> DeleteTopic(Guid id)
         {
-            var topic = await _TopicService.DeleteTopic(id); 
-            if (topic == null)
+            var Topic = await _TopicService.DeleteTopic(id);
+            if (Topic == null)
             {
                 return NotFound();
             }
