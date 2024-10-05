@@ -14,13 +14,13 @@ In this phase, the focus is on implementing the Crowdsourced Ideation Solution (
 
 Set these env variables in a `.env` from root.
 
-- Launch `users-api` and take in count is running in the same port of phase 2 (8080 by default):
+- Launch `users-api` and take in count is running in the same port of phase 2 (4000 by default):
 
 **Phase 1 run information**
-![phase_1server](public/img/phase1_server.png)
+![phase_1server](public/img/phase1-example.png)
 
 **Phase 2 endpoint consumption for phase 1**
-![phase_2_endpoint](public/img/phase_2_endpoint_phase1.png)
+![phase_2_endpoint](public/img/phase1-validate.png)
 
 # Launch Phase 2
 
