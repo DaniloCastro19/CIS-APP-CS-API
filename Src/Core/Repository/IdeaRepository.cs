@@ -28,8 +28,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task Update(Idea entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
-            await Save();
+            context.Update(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid id)
@@ -39,19 +39,20 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
             await Save();
         }
 
-        public async Task<IEnumerable<Idea>> GetByContent(string content)
+        public async Task<int> CountIdeas(string id)
         {
-            return await EntitySet.Where(i => i.Content!.Contains(content)).ToListAsync();
-        }
-
-        public async Task<int> CountIdeas()
-        {
-            return await EntitySet.CountAsync();
+            return await EntitySet.Where(idea => idea.UsersId == id).CountAsync();
         }
 
         public async Task Save()
         {
             await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Idea>> GetByUser(string userId)
+        {
+            return await EntitySet.Where(idea => idea.UsersId == userId).ToListAsync();
+
         }
     }
 }

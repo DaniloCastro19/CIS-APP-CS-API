@@ -22,16 +22,16 @@ var DATABASE = Environment.GetEnvironmentVariable("DATABASE");
 var USER = Environment.GetEnvironmentVariable("USER");
 var PASSWORD = Environment.GetEnvironmentVariable("PASSWORD");
 
-var MySqlConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
 // DbContext Configuration
+var MySqlConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(MySqlConnectionString, new MySqlServerVersion(new Version(8, 0, 21)))); 
 
-// Registry necessary reposirtories and services
+// Registry necessary repositories and services
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<ITopicService,TopicService>();
-builder.Services.AddScoped<IdeaService>();
+builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
 
