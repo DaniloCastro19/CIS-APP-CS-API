@@ -11,18 +11,27 @@ using FluentValidation;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using cis_api_legacy_integration_phase_2.Src.Core.Validations;
 
+using System;
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext Configuration
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("MySqlConnection"), 
-        new MySqlServerVersion(new Version(8, 0, 21)))); 
+//env variables initialization
+DotNetEnv.Env.Load();
+var SERVER = Environment.GetEnvironmentVariable("SERVER");
+var PORT = Environment.GetEnvironmentVariable("PORT");
+var DATABASE = Environment.GetEnvironmentVariable("DATABASE");
+var USER = Environment.GetEnvironmentVariable("USER");
+var PASSWORD = Environment.GetEnvironmentVariable("PASSWORD");
 
-// Registry necessary reposirtories and services
+// DbContext Configuration
+var MySqlConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseMySql(MySqlConnectionString, new MySqlServerVersion(new Version(8, 0, 21)))); 
+
+// Registry necessary repositories and services
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<ITopicService,TopicService>();
-builder.Services.AddScoped<IdeaService>();
+builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
 
