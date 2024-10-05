@@ -7,6 +7,9 @@ using cis_api_legacy_integration_phase_2.Src.Data.Context;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using FluentValidation;
+using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using cis_api_legacy_integration_phase_2.Src.Core.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +26,15 @@ builder.Services.AddScoped<IdeaService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
 
+// Adding ValidatorsDTO
+builder.Services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+
 // Adding controller service
-builder.Services.AddControllers();
+builder.Services.AddControllers( options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
+    
 
 
 // Swagger documentation configuration

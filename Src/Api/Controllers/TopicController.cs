@@ -2,6 +2,7 @@ using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
     public class TopicController : ControllerBase
     {
         private readonly ITopicService _topicService;
+        private IValidator<TopicDTO> _topicDTOvalidator;
 
-        public TopicController(ITopicService topicService)
+        public TopicController(ITopicService topicService, IValidator<TopicDTO> validator)
         {
             _topicService = topicService;
+            _topicDTOvalidator = validator;
         }
 
         [HttpGet]
@@ -51,33 +54,64 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
+            try
+            {
+                _topicDTOvalidator.ValidateAndThrow(topicDTO);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { errors = ex.Errors.Select(e => e.ErrorMessage) });
+            }
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var createdTopic = await _topicService.Create(topicDTO, userId);
 
-            return Ok(createdTopic);
+            return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTopic(string id, [FromBody] TopicDTO topicDTO) 
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (!Guid.TryParse(id, out Guid topicId))
+            {
+                return BadRequest(new { message = "Invalid topic ID format." });
+            }
             try
             {
+                await _topicService.ValidateOwnership(topicId, userId);
                 await _topicService.Update(topicDTO, userId, id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTopic(Guid id) 
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
+                await _topicService.ValidateOwnership(id, userId);
                 await _topicService.Delete(id);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
             }
             catch (KeyNotFoundException)
             {
