@@ -15,6 +15,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Idea> Ideas { get; set; }
+        public DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,6 +63,24 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+
+            modelBuilder.Entity<Vote>(entity =>
+            {
+                entity.ToTable("votes");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasMaxLength(36).IsRequired();
+                entity.Property(e => e.IsPositive).IsRequired();
+
+                entity.HasOne(v => v.User)
+                    .WithMany(u => u.Votes)
+                    .HasForeignKey(v => v.UsersId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(v => v.Idea)
+                    .WithMany(i => i.Votes)
+                    .HasForeignKey(v => v.IdeasId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
             base.OnModelCreating(modelBuilder);
         }
     }
