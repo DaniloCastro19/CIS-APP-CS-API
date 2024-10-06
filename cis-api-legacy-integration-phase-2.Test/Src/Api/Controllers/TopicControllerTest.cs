@@ -1,7 +1,4 @@
-using Xunit;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using cis_api_legacy_integration_phase_2.Src.Api.Controllers;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
@@ -46,5 +43,44 @@ namespace cis_api_legacy_integration_phase_2.Test
             var returnValue = Assert.IsType<List<Topic>>(okResult.Value); 
             Assert.Equal(2, returnValue.Count); 
         }
+        
+        [Fact]
+        public async Task GetTopicById_ExistingId_ReturnsOkResult_WithTopic()
+        {
+            // Arrange
+            var topicId = Guid.NewGuid();
+            var mockTopic = new Topic { Id = topicId.ToString(), Title = "Topic 1", Description = "Description 1" };
+
+            _mockTopicService.Setup(service => service.GetByID(topicId))
+                .ReturnsAsync(mockTopic);
+
+            // Act
+            var result = await _controller.GetTopicById(topicId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result); 
+            var returnValue = Assert.IsType<Topic>(okResult.Value); 
+
+            Assert.Equal(mockTopic.Id, returnValue.Id); 
+            Assert.Equal(mockTopic.Title, returnValue.Title);
+            Assert.Equal(mockTopic.Description, returnValue.Description);
+        }
+
+        [Fact]
+        public async Task GetTopicById_NonExistingId_ReturnsNotFound()
+        {
+            // Arrange
+            var topicId = Guid.NewGuid();
+
+            _mockTopicService.Setup(service => service.GetByID(topicId))
+                .ReturnsAsync((Topic)null);
+
+            // Act
+            var result = await _controller.GetTopicById(topicId);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result); 
+        }
     }
+    
 }
