@@ -11,4 +11,5 @@ public partial class User
 
     public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
     public ICollection<Idea> Ideas { get; set; } = new List<Idea>();
+    public ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }
