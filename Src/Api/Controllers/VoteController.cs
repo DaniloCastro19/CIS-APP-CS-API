@@ -1,33 +1,40 @@
+using System.Security.Claims;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
+using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class VoteController : ControllerBase
     {
-        private readonly VoteService _voteService;
+        private readonly IVoteService _voteService;
+        private IValidator<VoteDto> _voteDTOvalidator;
 
-        public VoteController(VoteService voteService)
+        public VoteController(IVoteService voteService, IValidator<VoteDto> voteValidator)
         {
             _voteService = voteService;
+            _voteDTOvalidator = voteValidator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllVotes()
         {
-            var votes = await _voteService.GetAllVotes();
+            var votes = await _voteService.GetAll();
             return Ok(votes);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVoteById(Guid id)
         {
-            var vote = await _voteService.GetVoteById(id);
+            var vote = await _voteService.GetByID(id);
             if (vote == null)
             {
                 return NotFound();
@@ -35,24 +42,20 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(vote);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateVote([FromBody] VoteDto voteDto)
+        [HttpPost("idea/{ideaId}")]
+        public async Task<IActionResult> CreateVote(Guid ideaId, [FromBody] VoteDto voteDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                _voteDTOvalidator.ValidateAndThrow(voteDto);
             }
-
-            var newVote = new Vote
+            catch (ValidationException ex)
             {
-                Id = Guid.NewGuid().ToString(),
-                IdeasId = voteDto.IdeasId,
-                UsersId = voteDto.UsersId,
-                IsPositive = voteDto.IsPositive,
-            };
-
-            var createdVote = await _voteService.CreateVote(newVote);
-            return CreatedAtAction(nameof(GetVoteById), new { id = createdVote.Id }, createdVote);
+                return BadRequest(new { errors = ex.Errors.Select(e => e.ErrorMessage) });
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var createVote = await _voteService.Create(voteDto, userId, ideaId);
+            return CreatedAtAction(nameof(GetVoteById), new { id = createVote.Id }, createVote);
         }
 
         [HttpPut("{id}")]
@@ -63,7 +66,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingVote = await _voteService.GetVoteById(id);
+            var existingVote = await _voteService.GetByID(id);
             if (existingVote == null)
             {
                 return NotFound();
@@ -71,15 +74,18 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 
             existingVote.IsPositive = voteDto.IsPositive;
 
-            await _voteService.UpdateVote(existingVote);
+            await _voteService.Update(existingVote);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVote(Guid id)
         {
-            var vote = await _voteService.DeleteVote(id);
-            if (vote == null)
+            try
+            {
+                await _voteService.Delete(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -87,28 +93,28 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetVotesByUserId(string userId)
+        public async Task<IActionResult> GetVotesByUserId(Guid userId)
         {
             var votes = await _voteService.GetVotesByUserId(userId);
             return Ok(votes);
         }
 
         [HttpGet("idea/{ideaId}")]
-        public async Task<IActionResult> GetVotesByIdeaId(string ideaId)
+        public async Task<IActionResult> GetVotesByIdeaId(Guid ideaId)
         {
             var votes = await _voteService.GetVotesByIdeaId(ideaId);
             return Ok(votes);
         }
 
         [HttpGet("idea/{ideaId}/positive/count")]
-        public async Task<IActionResult> CountPositiveVotesByIdeaId(string ideaId)
+        public async Task<IActionResult> CountPositiveVotesByIdeaId(Guid ideaId)
         {
             var count = await _voteService.CountPositiveVotesByIdeaId(ideaId);
             return Ok(count);
         }
 
         [HttpGet("idea/{ideaId}/negative/count")]
-        public async Task<IActionResult> CountNegativeVotesByIdeaId(string ideaId)
+        public async Task<IActionResult> CountNegativeVotesByIdeaId(Guid ideaId)
         {
             var count = await _voteService.CountNegativeVotesByIdeaId(ideaId);
             return Ok(count);

@@ -37,11 +37,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
         public async Task Update(Vote entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            
             await Save();
         }
 
-        public async Task<Vote> Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             var entity = await GetByID(id);
             if (entity != null)
@@ -49,7 +48,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
                 EntitySet.Remove(entity);
                 await Save();
             }
-            return entity;
         }
 
         public async Task Save()
@@ -57,11 +55,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-
-        public async Task<int> CountVotes()
-        {
-            return await EntitySet.CountAsync();
-        }
 
         public async Task<IEnumerable<Vote>> GetVotesByUserId(string userId)
         {
@@ -82,5 +75,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
         {
             return await EntitySet.CountAsync(v => v.IdeasId == ideaId && v.IsPositive == false);
         }
+        
     }
 }

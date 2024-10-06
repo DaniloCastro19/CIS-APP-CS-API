@@ -33,13 +33,14 @@ builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 builder.Services.AddScoped<ITopicService,TopicService>();
 builder.Services.AddScoped<IIdeaService, IdeaService>();
-builder.Services.AddScoped<VoteService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
 builder.Services.AddScoped<VoteController>();
 
 // Adding ValidatorsDTO
 builder.Services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+builder.Services.AddScoped<IValidator<VoteDto>, VoteDTOValidator>();
 
 // Adding controller service
 builder.Services.AddControllers( options =>
