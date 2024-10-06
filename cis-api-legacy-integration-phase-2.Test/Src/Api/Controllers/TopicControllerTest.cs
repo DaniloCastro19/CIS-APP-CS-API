@@ -152,5 +152,80 @@ namespace cis_api_legacy_integration_phase_2.Test
 
             Assert.IsType<NotFoundResult>(result);
         }
+
+        [Fact]
+        public async Task DeleteTopic_ValidId_ReturnsNoContent()
+        {
+            var topicId = Guid.NewGuid();
+            var userId = Guid.NewGuid().ToString();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+            }));
+
+            _controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
+                .Returns(Task.CompletedTask);
+            _mockTopicService.Setup(service => service.Delete(topicId))
+                .Returns(Task.CompletedTask);
+
+            var result = await _controller.DeleteTopic(topicId);
+
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task DeleteTopic_UnauthorizedAccess_ReturnsForbidden()
+        {
+            var topicId = Guid.NewGuid();
+            var userId = Guid.NewGuid().ToString();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+            }));
+
+            _controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
+                .ThrowsAsync(new UnauthorizedAccessException("User does not own this topic"));
+
+            var result = await _controller.DeleteTopic(topicId);
+
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(StatusCodes.Status403Forbidden, objectResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteTopic_TopicNotFound_ReturnsNotFound()
+        {
+            var topicId = Guid.NewGuid();
+            var userId = Guid.NewGuid().ToString();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+            }));
+
+            _controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
+                .ThrowsAsync(new KeyNotFoundException());
+
+            var result = await _controller.DeleteTopic(topicId);
+
+            Assert.IsType<NotFoundResult>(result);
+        }
     }
 }
