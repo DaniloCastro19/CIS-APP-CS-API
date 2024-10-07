@@ -15,7 +15,7 @@ public class OwnershipValidator<T> where T:class, IHasUserId
 
         if (entity.UsersId != userId)
         {
-            throw new UnauthorizedAccessException("You are not allowed to delete a topic you didn't create.");
+            throw new UnauthorizedAccessException("Action not allowed. Please, verify ownership.");
         }
 
     }

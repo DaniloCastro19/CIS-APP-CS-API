@@ -94,7 +94,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok("Topic Updated Succesfully.");
+
         }
 
         [HttpDelete("{id}")]
@@ -117,7 +118,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok("Topic Deleted Succesfully.");
+
         }
     }
 }

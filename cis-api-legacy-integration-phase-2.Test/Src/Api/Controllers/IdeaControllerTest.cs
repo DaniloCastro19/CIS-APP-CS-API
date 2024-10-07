@@ -51,31 +51,6 @@ public class IdeaControllerTests
     }
 
     [Fact]
-    public async Task CountUserIdeas_ReturnsOkResultWithCount()
-    {
-        var userId = Guid.NewGuid();
-        var count = 5;
-        _mockIdeaService.Setup(service => service.CountUserIdeas(userId)).ReturnsAsync(count);
-
-        var result = await _controller.CountUserIdeas(userId);
-
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(count, okResult.Value);
-    }
-
-    [Fact]
-    public async Task CountUserIdeas_UserWithNoIdeas_ReturnsZero()
-    {
-        var userId = Guid.NewGuid();
-        _mockIdeaService.Setup(service => service.CountUserIdeas(userId)).ReturnsAsync(0);
-
-        var result = await _controller.CountUserIdeas(userId);
-
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(0, okResult.Value);
-    }
-
-    [Fact]
     public async Task GetByUser_ReturnsOkResultWithIdeas()
     {
         var userId = Guid.NewGuid();
@@ -118,8 +93,9 @@ public class IdeaControllerTests
     public async Task Update_NonExistingIdea_ReturnsNotFound()
     {
         var id = Guid.NewGuid();
+        var userid = Guid.NewGuid().ToString();
         var ideaDto = new IdeaDTO();
-        _mockIdeaService.Setup(service => service.Update(id, ideaDto)).ReturnsAsync((Idea)null);
+        _mockIdeaService.Setup(service => service.Update(id, ideaDto, userid)).ReturnsAsync((Idea)null);
 
         var result = await _controller.Update(id, ideaDto);
 
@@ -131,7 +107,8 @@ public class IdeaControllerTests
     public async Task Delete_ExistingIdea_ReturnsNoContent()
     {
         var id = Guid.NewGuid();
-        _mockIdeaService.Setup(service => service.Delete(id)).Returns(Task.CompletedTask);
+        var userid = Guid.NewGuid().ToString();
+        _mockIdeaService.Setup(service => service.Delete(id,userid)).Returns(Task.CompletedTask);
 
         var result = await _controller.Delete(id);
 
@@ -142,7 +119,8 @@ public class IdeaControllerTests
     public async Task Delete_NonExistingIdea_ReturnsNotFound()
     {
         var id = Guid.NewGuid();
-        _mockIdeaService.Setup(service => service.Delete(id)).ThrowsAsync(new KeyNotFoundException());
+        var userid = Guid.NewGuid().ToString();
+        _mockIdeaService.Setup(service => service.Delete(id,userid)).ThrowsAsync(new KeyNotFoundException());
 
         var result = await _controller.Delete(id);
 

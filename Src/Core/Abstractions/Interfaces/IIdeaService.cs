@@ -8,9 +8,9 @@ public interface IIdeaService
 {
     Task<IEnumerable<Idea>> GetAll();
     Task<Idea> GetByID(Guid id);
-    Task<Idea> Create(IdeaDTO entity, string userID, Guid topicID );
-    Task<Idea> Update(Guid ideaID, IdeaDTO body);
-    Task Delete(Guid id);
+    Task<Idea> Create(IdeaDTO entity, string userID, Guid topicID);
+    Task<Idea> Update(Guid ideaID, IdeaDTO body, string userId);
+    Task Delete(Guid id, string userId);
     Task<IEnumerable<Idea>> GetByUser(Guid userId);
     Task<int> CountUserIdeas(Guid userId);
 }

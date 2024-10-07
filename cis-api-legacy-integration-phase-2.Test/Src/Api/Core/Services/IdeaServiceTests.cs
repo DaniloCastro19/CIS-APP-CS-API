@@ -4,21 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
+using cis_api_legacy_integration_phase_2.Src.Core.Validations;
+
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Moq;
 using Xunit;
+using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 
 public class IdeaServiceTests
 {
     private readonly Mock<IIdeaRepository> _mockRepository;
+    private readonly Mock<OwnershipValidator<Idea>> _mockOwnerValidator;
+
     private readonly IdeaService _service;
 
     public IdeaServiceTests()
     {
         _mockRepository = new Mock<IIdeaRepository>();
-        _service = new IdeaService(_mockRepository.Object);
+        _mockOwnerValidator = new Mock<OwnershipValidator<Idea>>();
+        _service = new IdeaService(_mockRepository.Object, _mockOwnerValidator.Object);
     }
 
     [Fact]
@@ -94,13 +100,15 @@ public class IdeaServiceTests
     public async Task Update_ShouldUpdateAndReturnExistingIdea()
     {
         var ideaId = Guid.NewGuid();
+        var userID = Guid.NewGuid().ToString();
+
         var existingIdea = new Idea { Id = ideaId.ToString(), Title = "Old Title", Content = "Old Content" };
         var updateDto = new IdeaDTO { Title = "Updated Title", Content = "Updated Content" };
 
         _mockRepository.Setup(repo => repo.GetByID(ideaId)).ReturnsAsync(existingIdea);
         _mockRepository.Setup(repo => repo.Update(It.IsAny<Idea>())).Returns(Task.CompletedTask);
 
-        var result = await _service.Update(ideaId, updateDto);
+        var result = await _service.Update(ideaId, updateDto, userID);
         Assert.NotNull(result);
         Assert.Equal(updateDto.Title, result.Title);
         Assert.Equal(updateDto.Content, result.Content);
@@ -111,10 +119,12 @@ public class IdeaServiceTests
     public async Task Update_ShouldReturnNullWhenIdeaDoesNotExist()
     {
         var ideaId = Guid.NewGuid();
+        var userID = Guid.NewGuid().ToString();
+
         var updateDto = new IdeaDTO { Title = "Updated Title", Content = "Updated Content" };
 
         _mockRepository.Setup(repo => repo.GetByID(ideaId))!.ReturnsAsync((Idea)null!);
-        var result = await _service.Update(ideaId, updateDto);
+        var result = await _service.Update(ideaId, updateDto, userID);
         Assert.Null(result);
         _mockRepository.Verify(repo => repo.Update(It.IsAny<Idea>()), Times.Never);
     }
@@ -123,8 +133,9 @@ public class IdeaServiceTests
     public async Task Delete_ShouldCallRepositoryDelete()
     {
         var ideaId = Guid.NewGuid();
+        var userID = Guid.NewGuid().ToString();
         _mockRepository.Setup(repo => repo.Delete(ideaId)).Returns(Task.CompletedTask);
-        await _service.Delete(ideaId);
+        await _service.Delete(ideaId, userID);
         _mockRepository.Verify(repo => repo.Delete(ideaId), Times.Once);
     }
 
@@ -161,12 +172,13 @@ public class IdeaServiceTests
     public async Task Update_ShouldThrowException_WhenRepositoryFails()
     {
         var ideaId = Guid.NewGuid();
+        var userID = Guid.NewGuid().ToString();
         var existingIdea = new Idea { Id = ideaId.ToString(), Title = "Old Title", Content = "Old Content" };
         var updateDto = new IdeaDTO { Title = "Updated Title", Content = "Updated Content" };
 
         _mockRepository.Setup(repo => repo.GetByID(ideaId)).ReturnsAsync(existingIdea);
         _mockRepository.Setup(repo => repo.Update(It.IsAny<Idea>())).ThrowsAsync(new Exception("Database error"));
 
-        await Assert.ThrowsAsync<Exception>(() => _service.Update(ideaId, updateDto));
+        await Assert.ThrowsAsync<Exception>(() => _service.Update(ideaId, updateDto, userID));
     }
 }

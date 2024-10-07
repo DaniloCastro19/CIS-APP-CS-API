@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
-using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
-using cis_api_legacy_integration_phase_2.Src.Core.Services;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +22,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var ideas = await _ideaService.GetAll();
-            return Ok(ideas);
-        }
-
-        [HttpGet("/user/{userId}/count")]
-        public async Task<IActionResult> CountUserIdeas(Guid userId)
-        {
-            var ideas = await _ideaService.CountUserIdeas(userId);
             return Ok(ideas);
         }
 
@@ -70,24 +61,46 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] IdeaDTO ideaDto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if(!ModelState.IsValid) return BadRequest(ModelState);
-            var result = await _ideaService.Update(id, ideaDto);
-            if(result==null) return NotFound("Idea not found.");
-            return Ok("Idea Updated Succesfully.");
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            try{
-                await _ideaService.Delete(id);
+            try
+            {
+                await _ideaService.Update(id, ideaDto,userId);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok("Idea Updated Succesfully.");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            try{
+                await _ideaService.Delete(id, userId);
+            }catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+
+            return Ok("Idea Deleted Succesfully.");
         }
     }
 }

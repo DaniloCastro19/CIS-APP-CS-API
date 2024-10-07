@@ -7,7 +7,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.DTO
     public class IdeaDTO
     {
         [Required(ErrorMessage = "Title is required")]
-        [StringLength(20, ErrorMessage = "Idea Title cannot be longer than 100 characters")]
+        [StringLength(100, ErrorMessage = "Idea Title cannot be longer than 100 characters")]
         public string Title { get; set; } = null!;
         
         [Required(ErrorMessage = "Content is required")]
