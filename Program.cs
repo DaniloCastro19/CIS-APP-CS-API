@@ -12,6 +12,7 @@ using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using cis_api_legacy_integration_phase_2.Src.Core.Validations;
 
 using System;
+using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 //env variables initialization
@@ -31,13 +32,13 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<IVoteRepository, VoteRepository>();
+builder.Services.AddScoped(typeof(OwnershipValidator<>));
 builder.Services.AddScoped<ITopicService,TopicService>();
 builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<IVoteService, VoteService>();
 builder.Services.AddScoped<TopicController>();
 builder.Services.AddScoped<IdeaController>();
 builder.Services.AddScoped<VoteController>();
-
 // Adding ValidatorsDTO
 builder.Services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 builder.Services.AddScoped<IValidator<VoteDto>, VoteDTOValidator>();

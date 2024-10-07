@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -79,8 +80,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
             try
             {
-                await _topicService.ValidateOwnership(topicId, userId);
-                await _topicService.Update(topicDTO, userId, id);
+                // await _topicService.ValidateOwnership(topicId, userId);
+                // await _ownershipValidator.ValidateOwnership(topicId, userId,);
+                await _topicService.Update(topicDTO, userId, topicId);
             }
             catch (UnauthorizedAccessException ex)
             {

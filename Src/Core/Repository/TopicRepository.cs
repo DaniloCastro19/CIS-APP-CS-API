@@ -36,8 +36,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task Update(Topic entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            await Save();
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid id)

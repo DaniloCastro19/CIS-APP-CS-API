@@ -78,7 +78,8 @@ namespace cis_api_legacy_integration_phase_2.Test
         [Fact]
         public async Task UpdateTopic_ValidIdAndDTO_ReturnsNoContent()
         {
-            var topicId = Guid.NewGuid().ToString();
+            var topicIdToString = Guid.NewGuid().ToString();
+            var topicId= Guid.NewGuid();
             var topicDTO = new TopicDTO { Title = "Updated Topic", Description = "Updated Description" };
             var userId = Guid.NewGuid().ToString();
 
@@ -97,7 +98,7 @@ namespace cis_api_legacy_integration_phase_2.Test
             _mockTopicService.Setup(service => service.Update(topicDTO, userId, topicId))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.UpdateTopic(topicId, topicDTO);
+            var result = await _controller.UpdateTopic(topicIdToString, topicDTO);
 
             Assert.IsType<NoContentResult>(result);
         }
