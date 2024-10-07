@@ -105,7 +105,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
-                await _topicService.ValidateOwnership(id, userId);
                 await _topicService.Delete(id);
             }
             catch (UnauthorizedAccessException ex)
