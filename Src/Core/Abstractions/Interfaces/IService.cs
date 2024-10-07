@@ -9,5 +9,5 @@ public interface IService<T, D> where T : class
     Task<T> GetByID(Guid id);
     Task<T> Create(D entity, string userID);
     Task Update(D entity, string userID, Guid topicID);
-    Task Delete(Guid id);
+    Task Delete(Guid id, string userID);
 }

@@ -80,8 +80,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
             try
             {
-                // await _topicService.ValidateOwnership(topicId, userId);
-                // await _ownershipValidator.ValidateOwnership(topicId, userId,);
                 await _topicService.Update(topicDTO, userId, topicId);
             }
             catch (UnauthorizedAccessException ex)
@@ -105,7 +103,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
-                await _topicService.Delete(id);
+                await _topicService.Delete(id, userId);
             }
             catch (UnauthorizedAccessException ex)
             {

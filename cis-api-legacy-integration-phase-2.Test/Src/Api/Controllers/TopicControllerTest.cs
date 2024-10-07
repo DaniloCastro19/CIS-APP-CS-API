@@ -164,7 +164,7 @@ namespace cis_api_legacy_integration_phase_2.Test
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            _mockTopicService.Setup(service => service.Delete(topicId))
+            _mockTopicService.Setup(service => service.Delete(topicId,userId))
                 .Returns(Task.CompletedTask);
 
             var result = await _controller.DeleteTopic(topicId);

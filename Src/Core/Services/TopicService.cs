@@ -65,8 +65,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             await _topicRepository.Update(existingTopic);
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(Guid id, string userId)
         {
+            await _ownershipValidator.ValidateOwnership(id, userId, _topicRepository);
             await _topicRepository.Delete(id);
         }
 

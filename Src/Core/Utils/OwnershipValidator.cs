@@ -10,7 +10,7 @@ public class OwnershipValidator<T> where T:class, IHasUserId
         var entity = await repository.GetByID(entityId);
         if (entity == null)
         {
-            throw new KeyNotFoundException("Topic not found.");
+            throw new KeyNotFoundException("Not found.");
         }
 
         if (entity.UsersId != userId)
