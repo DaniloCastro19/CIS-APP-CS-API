@@ -1,5 +1,6 @@
 ﻿using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     public class IdeaService: IIdeaService
     {
         private readonly IIdeaRepository _ideaRepository;
+        private readonly OwnershipValidator<Idea> _ownershipValidator;
 
-        public IdeaService(IIdeaRepository ideaRepository)
+        public IdeaService(IIdeaRepository ideaRepository,  OwnershipValidator<Idea> ownershipValidator)
         {
             _ideaRepository = ideaRepository;
+            _ownershipValidator = ownershipValidator;
         }
 
         public async Task<IEnumerable<Idea>> GetAll()
@@ -59,8 +62,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _ideaRepository.Insert(newIdea);
         }
 
-        public async Task<Idea> Update(Guid ideaID, IdeaDTO entity)
+        public async Task<Idea> Update(Guid ideaID, IdeaDTO entity, string userId)
         {
+            await _ownershipValidator.ValidateOwnership(ideaID, userId, _ideaRepository);
             var existingIdea = await _ideaRepository.GetByID(ideaID); 
             if (existingIdea == null) return null;
             existingIdea.Title = entity.Title;
@@ -69,8 +73,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return existingIdea;
         }
         
-        public async Task Delete(Guid id)
+        public async Task Delete(Guid id, string userId)
         {
+            await _ownershipValidator.ValidateOwnership(id, userId, _ideaRepository);
             await _ideaRepository.Delete(id);
         }
     }

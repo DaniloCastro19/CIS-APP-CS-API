@@ -1,6 +1,7 @@
 using System;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,14 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     public class TopicService: ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly OwnershipValidator<Topic> _ownershipValidator;
 
-        public TopicService(ITopicRepository topicRepository)
+
+        public TopicService(ITopicRepository topicRepository, OwnershipValidator<Topic> ownershipValidator)
         {
             _topicRepository = topicRepository;
+            _ownershipValidator = ownershipValidator;
+
         }
 
         public async Task<IEnumerable<Topic>> GetByTitle(string title)
@@ -50,21 +55,19 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _topicRepository.Insert(newTopic);
         }
 
-        public async Task Update(TopicDTO entity, string userId, string topicId)
+        public async Task Update(TopicDTO entity, string userId, Guid topicId)
         {
-            var newTopic = new Topic
-            {
-                Id = topicId, 
-                Title = entity.Title,
-                Description = entity.Description,
-                CreationDate = DateTime.UtcNow, 
-                UsersId = userId
-            };
-            await _topicRepository.Update(newTopic);
+            await _ownershipValidator.ValidateOwnership(topicId, userId, _topicRepository);
+            
+            var existingTopic= await _topicRepository.GetByID(topicId);
+            existingTopic.Title = entity.Title;
+            existingTopic.Description = entity.Description;
+            await _topicRepository.Update(existingTopic);
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(Guid id, string userId)
         {
+            await _ownershipValidator.ValidateOwnership(id, userId, _topicRepository);
             await _topicRepository.Delete(id);
         }
 
@@ -72,21 +75,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
         {
             var id = userId.ToString();
             return await _topicRepository.GetByUser(id);
-        }
-
-        public async Task ValidateOwnership(Guid topicId, string userId)
-        {
-            var topic = await GetByID(topicId);
-            if (topic == null)
-            {
-                throw new KeyNotFoundException("Topic not found.");
-            }
-
-            if (topic.UsersId != userId)
-            {
-                throw new UnauthorizedAccessException("You are not allowed to delete a topic you didn't create.");
-            }
-
         }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
-using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
+﻿using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 
-public class Topic
+public class Topic: IHasUserId
 {
     public string Id { get; set; }         
     public string Title { get; set; }     

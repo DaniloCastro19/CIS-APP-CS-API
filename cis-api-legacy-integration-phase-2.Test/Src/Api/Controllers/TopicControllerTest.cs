@@ -78,7 +78,8 @@ namespace cis_api_legacy_integration_phase_2.Test
         [Fact]
         public async Task UpdateTopic_ValidIdAndDTO_ReturnsNoContent()
         {
-            var topicId = Guid.NewGuid().ToString();
+            var topicIdToString = Guid.NewGuid().ToString();
+            var topicId= Guid.NewGuid();
             var topicDTO = new TopicDTO { Title = "Updated Topic", Description = "Updated Description" };
             var userId = Guid.NewGuid().ToString();
 
@@ -92,12 +93,10 @@ namespace cis_api_legacy_integration_phase_2.Test
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            _mockTopicService.Setup(service => service.ValidateOwnership(It.IsAny<Guid>(), userId))
-                .Returns(Task.CompletedTask);
             _mockTopicService.Setup(service => service.Update(topicDTO, userId, topicId))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.UpdateTopic(topicId, topicDTO);
+            var result = await _controller.UpdateTopic(topicIdToString, topicDTO);
 
             Assert.IsType<NoContentResult>(result);
         }
@@ -118,9 +117,6 @@ namespace cis_api_legacy_integration_phase_2.Test
             {
                 HttpContext = new DefaultHttpContext { User = user }
             };
-
-            _mockTopicService.Setup(service => service.ValidateOwnership(It.IsAny<Guid>(), userId))
-                .ThrowsAsync(new UnauthorizedAccessException("User does not own this topic"));
 
             var result = await _controller.UpdateTopic(topicId, topicDTO);
 
@@ -145,8 +141,7 @@ namespace cis_api_legacy_integration_phase_2.Test
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            _mockTopicService.Setup(service => service.ValidateOwnership(It.IsAny<Guid>(), userId))
-                .ThrowsAsync(new KeyNotFoundException());
+
 
             var result = await _controller.UpdateTopic(topicId, topicDTO);
 
@@ -169,9 +164,7 @@ namespace cis_api_legacy_integration_phase_2.Test
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
-                .Returns(Task.CompletedTask);
-            _mockTopicService.Setup(service => service.Delete(topicId))
+            _mockTopicService.Setup(service => service.Delete(topicId,userId))
                 .Returns(Task.CompletedTask);
 
             var result = await _controller.DeleteTopic(topicId);
@@ -195,8 +188,6 @@ namespace cis_api_legacy_integration_phase_2.Test
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
-                .ThrowsAsync(new UnauthorizedAccessException("User does not own this topic"));
 
             var result = await _controller.DeleteTopic(topicId);
 
@@ -219,9 +210,6 @@ namespace cis_api_legacy_integration_phase_2.Test
             {
                 HttpContext = new DefaultHttpContext { User = user }
             };
-
-            _mockTopicService.Setup(service => service.ValidateOwnership(topicId, userId))
-                .ThrowsAsync(new KeyNotFoundException());
 
             var result = await _controller.DeleteTopic(topicId);
 

@@ -13,11 +13,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces
         Task<IEnumerable<Vote>> GetVotesByIdeaId(Guid ideaId);
         Task<int> CountPositiveVotesByIdeaId(Guid ideaId);
         Task<int> CountNegativeVotesByIdeaId(Guid ideaId);
-        Task<Vote> Create(VoteDto voteDTO, string userID, Guid ideaID);
+        Task<Vote> Create(bool voteValue, string userID, Guid voteID);
         Task<IEnumerable<Vote>> GetAll();
         Task<Vote?> GetByID(Guid id);
-        Task Update(Vote vote);
-        Task Delete(Guid id);
+        Task Update(Guid id, bool voteValue, string userId);
+        Task Delete(Guid id, string userId);
 
         
     }

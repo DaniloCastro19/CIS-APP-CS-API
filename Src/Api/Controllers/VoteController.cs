@@ -43,53 +43,56 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost("idea/{ideaId}")]
-        public async Task<IActionResult> CreateVote(Guid ideaId, [FromBody] VoteDto voteDto)
+        public async Task<IActionResult> CreateVote(Guid ideaId, [FromHeader] bool voteValue)
         {
-            try
-            {
-                _voteDTOvalidator.ValidateAndThrow(voteDto);
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(new { errors = ex.Errors.Select(e => e.ErrorMessage) });
-            }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var createVote = await _voteService.Create(voteDto, userId, ideaId);
+            var createVote = await _voteService.Create(voteValue, userId, ideaId);
             return CreatedAtAction(nameof(GetVoteById), new { id = createVote.Id }, createVote);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVote(Guid id, [FromBody] VoteDto voteDto)
+        public async Task<IActionResult> UpdateVote(Guid id, [FromHeader] bool voteValue)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var existingVote = await _voteService.GetByID(id);
-            if (existingVote == null)
-            {
-                return NotFound();
-            }
-
-            existingVote.IsPositive = voteDto.IsPositive;
-
-            await _voteService.Update(existingVote);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVote(Guid id)
-        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if(!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                await _voteService.Delete(id);
+                await _voteService.Update(id, voteValue,userId);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok("Vote updated suceesfully");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVote(Guid id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            try
+            {
+                await _voteService.Delete(id, userId);
+            }catch (UnauthorizedAccessException ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            return Ok("Vote deleted suceesfully");
+
         }
 
         [HttpGet("user/{userId}")]
