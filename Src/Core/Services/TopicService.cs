@@ -47,7 +47,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
         public async Task<TopicDTOResponse> Create(TopicDTO entity, string userId)
         {
             User user = await _userService.GetUserById(userId);
-            if (user ==null) return null;
+
             TopicDTOBuilder dtoBuilder = new TopicDTOBuilder();
             UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
             UserDto userDto = userDTOBuilder.Build(user);
@@ -58,7 +58,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
                 Description = entity.Description,
                 CreationDate = DateTime.UtcNow, 
                 UsersId = userId,
-                OwnerLogin = user.Login// Why is not being seted? 
+                OwnerLogin = user.Login
             };
             var response = await _topicRepository.Insert(newTopic);
             if (response==null) return null;

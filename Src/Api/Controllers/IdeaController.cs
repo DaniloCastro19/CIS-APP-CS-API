@@ -45,7 +45,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost("{topicId}")]
-        public async Task<IActionResult> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
+        public async Task<ActionResult<IdeaDTOResponse>> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -55,7 +55,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
 
             var newIdea = await _ideaService.Create(ideaDto, userId, topicId);
-            return CreatedAtAction(nameof(GetById), new { id = newIdea.Id }, newIdea);
+            return Ok(newIdea);
         }
 
         [HttpPut("{id}")]

@@ -11,9 +11,6 @@ public class UserService : IUserService
     private readonly HttpClient _httpClient = new();
     public async Task<User> GetUserById(string userId)
     {
-        // _httpClient.DefaultRequestHeaders.Clear();
-        // _httpClient.DefaultRequestHeaders.Add("Username", "root");
-        // _httpClient.DefaultRequestHeaders.Add("Password", "root");
         string endpoint = $"{Constants.USER_ENDPOINT}/{userId}";
         try
         {
@@ -21,14 +18,6 @@ public class UserService : IUserService
             if (!response.IsSuccessStatusCode) return null;
             string jsonResponse = await response.Content.ReadAsStringAsync();
             User user = JsonConvert.DeserializeObject<User>(jsonResponse);
-            // User user = new User{
-            //     Id = userDeserialized.Id,
-            //     Login = userDeserialized.Login,
-            //     Name = userDeserialized.Name,
-            //     Password = userDeserialized.Password,
-
-            // };
-            Console.WriteLine(user);
             return user;
         }
         catch (Exception)

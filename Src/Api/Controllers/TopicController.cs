@@ -66,8 +66,6 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var response = await _topicService.Create(topicDTO, userId);
-            if (response== null) return BadRequest("Something goes wrong."); 
-
             return Ok(response);
         }
 

@@ -1,4 +1,5 @@
-﻿using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
+﻿using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
@@ -12,11 +13,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     {
         private readonly IIdeaRepository _ideaRepository;
         private readonly OwnershipValidator<Idea> _ownershipValidator;
+        private readonly ITopicService _topicService;
 
-        public IdeaService(IIdeaRepository ideaRepository,  OwnershipValidator<Idea> ownershipValidator)
+
+
+        public IdeaService(IIdeaRepository ideaRepository,  OwnershipValidator<Idea> ownershipValidator, ITopicService topicService)
         {
             _ideaRepository = ideaRepository;
             _ownershipValidator = ownershipValidator;
+            _topicService = topicService;
         }
 
         public async Task<IEnumerable<Idea>> GetAll()
@@ -47,19 +52,30 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return  await _ideaRepository.CountIdeas(id);
         }
 
-        public async Task<Idea> Create(IdeaDTO entity, string userID, Guid topicID)
+        public async Task<IdeaDTOResponse> Create(IdeaDTO entity, string userID, Guid topicID)
         {
+            Topic topic = await _topicService.GetByID(topicID);
+            if(topic==null) return null;
+
+            IdeaDTOBuilder ideaDTOBuilder = new IdeaDTOBuilder();
+
+
             var topicIdToString = topicID.ToString();
-            var newIdea = new Idea
+            Idea newIdea = new Idea
             {
                 Id = Guid.NewGuid().ToString(),
                 Title= entity.Title,
                 Content = entity.Content,
                 CreationDate = DateTime.UtcNow,
                 UsersId = userID,
-                TopicsId = topicIdToString
+                TopicsId = topicIdToString,
+                Topic= topic,
             };
-            return await _ideaRepository.Insert(newIdea);
+            topic.Ideas.Add(newIdea);
+            IdeaDTOResponse DTOResponse = ideaDTOBuilder.Build(newIdea);
+            var response = await _ideaRepository.Insert(newIdea);
+            if (response==null) return null;
+            return DTOResponse;
         }
 
         public async Task<Idea> Update(Guid ideaID, IdeaDTO entity, string userId)

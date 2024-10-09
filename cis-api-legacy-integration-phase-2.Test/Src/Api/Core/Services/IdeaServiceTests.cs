@@ -17,6 +17,8 @@ public class IdeaServiceTests
 {
     private readonly Mock<IIdeaRepository> _mockRepository;
     private readonly Mock<OwnershipValidator<Idea>> _mockOwnerValidator;
+    private readonly Mock<ITopicService> _mockTopicRepository;
+
 
     private readonly IdeaService _service;
 
@@ -24,7 +26,9 @@ public class IdeaServiceTests
     {
         _mockRepository = new Mock<IIdeaRepository>();
         _mockOwnerValidator = new Mock<OwnershipValidator<Idea>>();
-        _service = new IdeaService(_mockRepository.Object, _mockOwnerValidator.Object);
+        _mockTopicRepository = new Mock<ITopicService>();
+
+        _service = new IdeaService(_mockRepository.Object, _mockOwnerValidator.Object, _mockTopicRepository.Object);
     }
 
     [Fact]
@@ -91,8 +95,8 @@ public class IdeaServiceTests
         Assert.NotNull(result);
         Assert.Equal(ideaDto.Title, result.Title);
         Assert.Equal(ideaDto.Content, result.Content);
-        Assert.Equal(userId, result.UsersId);
-        Assert.Equal(topicId.ToString(), result.TopicsId);
+        Assert.Equal(userId, result.OwnerID);
+        Assert.Equal(topicId.ToString(), result.TopicID);
         Assert.NotEqual(Guid.Empty.ToString(), result.Id);
     }
 

@@ -14,5 +14,5 @@ public class Topic: IHasUserId
     
     public string OwnerLogin { get; set; }
     
-    public ICollection<Idea> Ideas { get; set; } = new List<Idea>();
+    public ICollection<Idea> Ideas { get; set; }
 }

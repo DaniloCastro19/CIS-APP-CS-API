@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 
 #nullable disable
 
@@ -76,7 +77,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
 
                     b.HasIndex("TopicsId");
 
-                    b.HasIndex("UsersId");
+                    // b.HasIndex("UserId");
 
                     b.ToTable("ideas", (string)null);
                 });
@@ -104,16 +105,18 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(36)");
-
                     b.Property<string>("UsersId")
                         .IsRequired()
                         .HasColumnType("longtext");
+                        
+                    
+                    b.Property<ICollection<Idea>>("Ideas")
+                        .IsRequired()
+                        .HasColumnType("JSON_ARRAY");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    
 
                     b.ToTable("topics", (string)null);
                 });
@@ -152,15 +155,11 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", "User")
-                        .WithMany("Ideas")
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    // b.HasOne("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", null)
+                    //     .WithMany("Ideas")
+                    //     .HasForeignKey("UserId");
 
                     b.Navigation("Topic");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Topic", b =>
@@ -191,7 +190,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
 
             modelBuilder.Entity("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", b =>
                 {
-                    b.Navigation("Ideas");
+                    // b.Navigation("Ideas");
 
                     b.Navigation("Topics");
 
