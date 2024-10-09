@@ -38,10 +38,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.Description).HasMaxLength(255).IsRequired();
                 entity.Property(e => e.CreationDate).IsRequired();
 
-                entity.HasOne(t => t.User)  
-                    .WithMany(u => u.Topics) 
-                    .HasForeignKey(t => t.UsersId) 
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(t => t.User)  
+                //     .WithMany(u => u.Topics) 
+                //     .HasForeignKey(t => t.UsersId) 
+                //     .OnDelete(DeleteBehavior.Cascade);
             });
             
             modelBuilder.Entity<Idea>(entity =>

@@ -53,7 +53,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Topic>> CreateTopic([FromBody] TopicDTO topicDTO)
+        public async Task<ActionResult<TopicDTOResponse>> CreateTopic([FromBody] TopicDTO topicDTO)
         {
             try
             {
@@ -65,9 +65,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var createdTopic = await _topicService.Create(topicDTO, userId);
+            var response = await _topicService.Create(topicDTO, userId);
+            if (response== null) return BadRequest("Something goes wrong."); 
 
-            return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
+            return Ok(response);
         }
 
         [HttpPut("{id}")]
