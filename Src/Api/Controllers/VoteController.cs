@@ -43,11 +43,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost("idea/{ideaId}")]
-        public async Task<IActionResult> CreateVote(Guid ideaId, [FromHeader] bool voteValue)
+        public async Task<ActionResult<Idea>> CreateVote(Guid ideaId, [FromHeader] bool voteValue)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var createVote = await _voteService.Create(voteValue, userId, ideaId);
-            return CreatedAtAction(nameof(GetVoteById), new { id = createVote.Id }, createVote);
+            var createdVote = await _voteService.Create(voteValue, userId, ideaId);
+            return Ok(createdVote);
         }
 
         [HttpPut("{id}")]

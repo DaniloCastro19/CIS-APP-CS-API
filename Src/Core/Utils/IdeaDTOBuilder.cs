@@ -14,9 +14,9 @@ public class IdeaDTOBuilder
                 Content=entity.Content,
                 CreationDate = entity.CreationDate,
                 OwnerID = entity.UsersId,
-                OwnerLogin = entity.Topic.OwnerLogin,
-                TopicID = entity.Topic.Id,
-                TopicName = entity.Topic.Title,
+                OwnerLogin = entity.OwnerLogin,
+                TopicID = entity.TopicsId,
+                TopicName = entity.TopicName,
             };
     }
 }

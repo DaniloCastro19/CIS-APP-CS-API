@@ -8,8 +8,4 @@ public partial class User
     public string Login { get; set; } 
     public string Name { get; set; } 
     public string Password { get; set; } 
-
-    public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
-    public List<Idea> Ideas { get; set; }
-    public ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }

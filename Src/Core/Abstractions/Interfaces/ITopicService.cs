@@ -7,7 +7,7 @@ public interface ITopicService
 {
     Task<IEnumerable<Topic>> GetAll();
     Task<Topic> GetByID(Guid id);
-    Task<TopicDTOResponse> Create(TopicDTO entity, string userID);
+    Task<Topic> Create(TopicDTO entity, string userID);
     Task Update(TopicDTO entity, string userID, Guid topicID);
     Task Delete(Guid id, string userID);
     Task<IEnumerable<Topic>> GetByTitle(string title);

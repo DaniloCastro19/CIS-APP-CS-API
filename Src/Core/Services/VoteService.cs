@@ -1,3 +1,4 @@
+using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
@@ -8,13 +9,18 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     {
         private readonly IVoteRepository _voteRepository;
         private readonly OwnershipValidator<Vote> _ownershipValidator;
+        private readonly IIdeaService _ideaService;
+        private readonly IUserService _userService;
 
 
-        public VoteService(IVoteRepository voteRepository, OwnershipValidator<Vote> ownershipValidator)
+
+
+        public VoteService(IVoteRepository voteRepository, OwnershipValidator<Vote> ownershipValidator, IIdeaService ideaService, IUserService userService)
         {
             _voteRepository = voteRepository;
             _ownershipValidator = ownershipValidator;
-
+            _ideaService = ideaService;
+            _userService = userService;
         }
 
         public async Task<IEnumerable<Vote>> GetAll()
@@ -27,15 +33,20 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _voteRepository.GetByID(id);
         }
 
-        public async Task<Vote> Create(bool voteValue, string userID, Guid voteID)
+        public async Task<Vote> Create(bool voteValue, string userID, Guid ideaId)
         {
-            var ideaToString = voteID.ToString();
+            User user = await _userService.GetUserById(userID);
+            Idea idea = await _ideaService.GetByID(ideaId);
+            var ideaToString = ideaId.ToString();
             var newVote = new Vote
             {
                 Id = Guid.NewGuid().ToString(),
                 IsPositive = voteValue,
                 UsersId = userID,
+                OwnerLogin = user.Login,
                 IdeasId = ideaToString,
+                IdeaName= idea.Title
+            
             };
             return await _voteRepository.Insert(newVote);
         }

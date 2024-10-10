@@ -44,13 +44,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             return await _topicRepository.GetByID(id);
         }
 
-        public async Task<TopicDTOResponse> Create(TopicDTO entity, string userId)
+        public async Task<Topic> Create(TopicDTO entity, string userId)
         {
             User user = await _userService.GetUserById(userId);
-
-            TopicDTOBuilder dtoBuilder = new TopicDTOBuilder();
-            UserDTOBuilder userDTOBuilder = new UserDTOBuilder();
-            UserDto userDto = userDTOBuilder.Build(user);
             var newTopic = new Topic
             {
                 Id = Guid.NewGuid().ToString(), 
@@ -60,10 +56,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
                 UsersId = userId,
                 OwnerLogin = user.Login
             };
-            var response = await _topicRepository.Insert(newTopic);
-            if (response==null) return null;
-            TopicDTOResponse dTOResponse = dtoBuilder.Build(newTopic, userDto);
-            return dTOResponse;
+            return await _topicRepository.Insert(newTopic);
         }
 
         public async Task Update(TopicDTO entity, string userId, Guid topicId)

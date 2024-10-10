@@ -13,6 +13,4 @@ public class Topic: IHasUserId
     public string UsersId { get; set; }     
     
     public string OwnerLogin { get; set; }
-    
-    public ICollection<Idea> Ideas { get; set; }
 }

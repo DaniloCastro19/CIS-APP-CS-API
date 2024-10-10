@@ -12,8 +12,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models
         public string? Content { get; set; }
         public DateTime CreationDate { get; set; }
         public string UsersId { get; set; }  
+        public string OwnerLogin { get; set; }
+
         public string TopicsId { get; set; } 
-        public virtual Topic Topic { get; set; } 
-        public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
+        public string TopicName { get; set; }
+
     }
 }

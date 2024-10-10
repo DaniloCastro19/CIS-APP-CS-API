@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost("{topicId}")]
-        public async Task<ActionResult<IdeaDTOResponse>> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
+        public async Task<ActionResult<Idea>> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

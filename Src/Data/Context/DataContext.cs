@@ -58,10 +58,10 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 //     .HasForeignKey(i => i.UsersId)
                 //     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(i => i.Topic)
-                    .WithMany(t => t.Ideas) 
-                    .HasForeignKey(i => i.TopicsId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(i => i.Topic)
+                //     .WithMany(t => t.Ideas) 
+                //     .HasForeignKey(i => i.TopicsId)
+                //     .OnDelete(DeleteBehavior.Cascade);
             });
 
 
@@ -72,15 +72,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.Id).HasMaxLength(36).IsRequired();
                 entity.Property(e => e.IsPositive).IsRequired();
 
-                entity.HasOne(v => v.User)
-                    .WithMany(u => u.Votes)
-                    .HasForeignKey(v => v.UsersId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(v => v.User)
+                //     .WithMany(u => u.Votes)
+                //     .HasForeignKey(v => v.UsersId)
+                //     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(v => v.Idea)
-                    .WithMany(i => i.Votes)
-                    .HasForeignKey(v => v.IdeasId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(v => v.Idea)
+                //     .WithMany(i => i.Votes)
+                //     .HasForeignKey(v => v.IdeasId)
+                //     .OnDelete(DeleteBehavior.Cascade);
             });
             base.OnModelCreating(modelBuilder);
         }
