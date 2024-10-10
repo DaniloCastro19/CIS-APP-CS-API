@@ -1,33 +1,28 @@
-variables:
-  EXE_RELEASE_FOLDER: 'cis-api-legacy-integration-phase-2/cis-api-legacy-integration-phase-2/bin/Release'
-  TEST_FOLDER: 'cis-api-legacy-integration-phase-2/cis-api-legacy-integration-phase-2.Test/bin/Release'
-  DOTNET_PATH: '/usr/bin/dotnet'
-
 stages:
   - build
   - test
 
-build_job:
+variables:
+  DOTNET_VERSION: "8.0" 
+
+build:
   stage: build
-  only:
-    - tags
+  
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
   script:
-    - '$env:DOTNET_PATH restore'  
-    - '$env:DOTNET_PATH build /p:Configuration=Release' 
+    - dotnet restore
+    - dotnet build --configuration Release
   artifacts:
-    expire_in: 1 week
     paths:
-      - '$env:EXE_RELEASE_FOLDER/' 
-test_job:
+      - bin/
+      - obj/
+  only:
+    - merge_requests
+
+test:
   stage: test
-  only:
-    - tags
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
   script:
-    - '$env:DOTNET_PATH test $env:TEST_FOLDER/cis-api-legacy-integration-phase-2.Test.csproj --configuration Release'  
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - '$env:TEST_FOLDER/TestResults/' 
-  dependencies:
-    - build_job
+    - dotnet test --no-restore --verbosity normal --configuration Release
+  only:
+    - merge_requests
