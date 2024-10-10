@@ -1,0 +1,27 @@
+stages:
+  - build
+  - test
+
+variables:
+  DOTNET_VERSION: "8.0" 
+
+build:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
+  script:
+    - dotnet restore
+    - dotnet build --configuration Release
+  artifacts:
+    paths:
+      - bin/
+      - obj/
+  only:
+    - develop
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
+  script:
+    - dotnet test --no-restore --verbosity normal --configuration Release
+  only:
+    - develop
