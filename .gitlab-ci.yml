@@ -3,26 +3,37 @@ stages:
   - test
 
 variables:
-  DOTNET_VERSION: "8.0" 
+  DOTNET_VERSION: "8.0"
+  CONFIGURATION: "Release"
+
+before_script:
+  - echo "Setting up .NET environment"
+  - dotnet --version
 
 build:
   stage: build
-  
   image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
   script:
+    - echo "Restoring dependencies..."
     - dotnet restore
-    - dotnet build --configuration Release
+    - echo "Building the project..."
+    - dotnet build --configuration $CONFIGURATION --no-restore
   artifacts:
     paths:
       - bin/
       - obj/
-  only:
-    - merge_requests
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
 
 test:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
   script:
-    - dotnet test --no-restore --verbosity normal --configuration Release
-  only:
-    - merge_requests
+    - echo "Running tests..."
+    - dotnet test --no-restore --verbosity normal --configuration $CONFIGURATION
+  artifacts:
+    when: always
+    paths:
+      - **/TestResults/*.trx
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
