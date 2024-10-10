@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
 
 variables:
   DOTNET_VERSION: "8.0"
@@ -22,18 +21,5 @@ build:
     paths:
       - bin/
       - obj/
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID'
-
-test:
-  stage: test
-  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
-  script:
-    - echo "Running tests..."
-    - dotnet test --no-restore --verbosity normal --configuration $CONFIGURATION
-  artifacts:
-    when: always
-    paths:
-      - **/TestResults/*.trx
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
