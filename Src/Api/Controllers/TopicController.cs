@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/topics")]
     [ApiController]
     public class TopicController : ControllerBase
     {

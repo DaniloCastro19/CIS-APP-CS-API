@@ -9,7 +9,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/ideas")]
     public class IdeaController : ControllerBase
     {
         private readonly IIdeaService _ideaService;
@@ -26,7 +26,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(ideas);
         }
         
-        [HttpGet("user/{userId}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetByUser(Guid userId)
         {
             var ideas = await _ideaService.GetByUser(userId);

@@ -12,16 +12,14 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/votes")]
     public class VoteController : ControllerBase
     {
         private readonly IVoteService _voteService;
-        private IValidator<VoteDto> _voteDTOvalidator;
 
-        public VoteController(IVoteService voteService, IValidator<VoteDto> voteValidator)
+        public VoteController(IVoteService voteService)
         {
             _voteService = voteService;
-            _voteDTOvalidator = voteValidator;
         }
 
         [HttpGet]
@@ -42,7 +40,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(vote);
         }
 
-        [HttpPost("idea/{ideaId}")]
+        [HttpPost("ideas/{ideaId}")]
         public async Task<ActionResult<Idea>> CreateVote(Guid ideaId, [FromHeader] bool voteValue)
         {
             if (!ModelState.IsValid)
@@ -100,21 +98,21 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetVotesByUserId(Guid userId)
         {
             var votes = await _voteService.GetVotesByUserId(userId);
             return Ok(votes);
         }
 
-        [HttpGet("idea/{ideaId}")]
+        [HttpGet("ideas/{ideaId}")]
         public async Task<IActionResult> GetVotesByIdeaId(Guid ideaId)
         {
             var votes = await _voteService.GetVotesByIdeaId(ideaId);
             return Ok(votes);
         }
 
-        [HttpGet("idea/{ideaId}/positive/count")]
+        [HttpGet("ideas/{ideaId}/positive/count")]
         
         public async Task<IActionResult> CountPositiveVotesByIdeaId(Guid ideaId)
         {
@@ -122,7 +120,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             return Ok(count);
         }
 
-        [HttpGet("idea/{ideaId}/negative/count")]
+        [HttpGet("ideas/{ideaId}/negative/count")]
         public async Task<IActionResult> CountNegativeVotesByIdeaId(Guid ideaId)
         {
             var count = await _voteService.CountNegativeVotesByIdeaId(ideaId);
