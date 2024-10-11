@@ -4,7 +4,7 @@ stages:
 
 variables:
   DOTNET_VERSION: "8.0"
-  CONFIGURATION: "Release"
+  CONFIGURATION: "Debug"
 
 before_script:
   - echo "Setting up .NET environment"
@@ -31,6 +31,6 @@ test:
     - build
   script:
     - echo "Running tests..."
-    - dotnet test --configuration $CONFIGURATION --no-build
+    - dotnet test --configuration $CONFIGURATION --no-build --test-adapter-path:. --logger:"console;verbosity=detailed"
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
