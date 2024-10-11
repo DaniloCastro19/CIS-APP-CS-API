@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/ideas")]
     public class IdeaController : ControllerBase
     {
         private readonly IIdeaService _ideaService;
@@ -19,14 +20,13 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool mostWanted= false)
         {
-            var ideas = await _ideaService.GetAll();
+            var ideas = await _ideaService.GetAll(mostWanted);
             return Ok(ideas);
         }
-
         
-        [HttpGet("user/{userId}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetByUser(Guid userId)
         {
             var ideas = await _ideaService.GetByUser(userId);
@@ -45,7 +45,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpPost("{topicId}")]
-        public async Task<IActionResult> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
+        public async Task<ActionResult<Idea>> Create(Guid topicId, [FromBody] IdeaDTO ideaDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -55,7 +55,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
 
             var newIdea = await _ideaService.Create(ideaDto, userId, topicId);
-            return CreatedAtAction(nameof(GetById), new { id = newIdea.Id }, newIdea);
+            return Ok(newIdea);
         }
 
         [HttpPut("{id}")]

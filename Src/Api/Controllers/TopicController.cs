@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/topics")]
     [ApiController]
     public class TopicController : ControllerBase
     {
@@ -65,9 +65,8 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var createdTopic = await _topicService.Create(topicDTO, userId);
-
-            return CreatedAtAction(nameof(GetTopicById), new { id = createdTopic.Id }, createdTopic);
+            var response = await _topicService.Create(topicDTO, userId);
+            return Ok(response);
         }
 
         [HttpPut("{id}")]

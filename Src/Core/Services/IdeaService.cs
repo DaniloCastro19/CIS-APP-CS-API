@@ -1,4 +1,5 @@
-﻿using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
+﻿using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
@@ -12,16 +13,24 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     {
         private readonly IIdeaRepository _ideaRepository;
         private readonly OwnershipValidator<Idea> _ownershipValidator;
+        private readonly ITopicService _topicService;
+        private readonly IUserService _userService;
 
-        public IdeaService(IIdeaRepository ideaRepository,  OwnershipValidator<Idea> ownershipValidator)
+
+
+
+        public IdeaService(IIdeaRepository ideaRepository,  OwnershipValidator<Idea> ownershipValidator, ITopicService topicService,IUserService userService)
         {
             _ideaRepository = ideaRepository;
             _ownershipValidator = ownershipValidator;
+            _topicService = topicService;
+            _userService = userService;
+
         }
 
-        public async Task<IEnumerable<Idea>> GetAll()
+        public async Task<IEnumerable<Idea>> GetAll(bool mostWanted)
         {
-            return await _ideaRepository.GetAll();
+            return await _ideaRepository.GetAll(mostWanted);
         }
 
         public async Task<Idea?> GetByID(Guid id)
@@ -49,17 +58,23 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
 
         public async Task<Idea> Create(IdeaDTO entity, string userID, Guid topicID)
         {
+            User user = await _userService.GetUserById(userID);
+            Topic topic = await _topicService.GetByID(topicID);
+            if(topic==null) return null;
+            
             var topicIdToString = topicID.ToString();
-            var newIdea = new Idea
+            Idea newIdea = new Idea
             {
                 Id = Guid.NewGuid().ToString(),
                 Title= entity.Title,
                 Content = entity.Content,
                 CreationDate = DateTime.UtcNow,
                 UsersId = userID,
-                TopicsId = topicIdToString
+                TopicsId = topicIdToString,
+                OwnerLogin = user.Login,
+                TopicName = topic.Title
             };
-            return await _ideaRepository.Insert(newIdea);
+            return await _ideaRepository.Insert(newIdea);;
         }
 
         public async Task<Idea> Update(Guid ideaID, IdeaDTO entity, string userId)

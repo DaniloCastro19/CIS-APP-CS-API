@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
 
@@ -11,9 +12,11 @@ using cis_api_legacy_integration_phase_2.Src.Data.Context;
 namespace cis_api_legacy_integration_phase_2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241009171519_TopicsWithoutUserRelation")]
+    partial class TopicsWithoutUserRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,26 +64,22 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("OwnerLogin")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Title")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TopicName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("TopicsId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(36)");
 
                     b.Property<string>("UsersId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TopicsId");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("ideas", (string)null);
                 });
@@ -108,11 +107,16 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(36)");
+
                     b.Property<string>("UsersId")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("topics", (string)null);
                 });
@@ -123,28 +127,88 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("varchar(36)");
 
-                    b.Property<string>("IdeaName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("IdeasId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(36)");
 
                     b.Property<bool>("IsPositive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("OwnerLogin")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("UsersId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdeasId");
+
+                    b.HasIndex("UsersId");
+
                     b.ToTable("votes", (string)null);
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Idea", b =>
+                {
+                    b.HasOne("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Topic", "Topic")
+                        .WithMany("Ideas")
+                        .HasForeignKey("TopicsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", "User")
+                        .WithMany("Ideas")
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Topic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Topic", b =>
+                {
+                    b.HasOne("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", null)
+                        .WithMany("Topics")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Vote", b =>
+                {
+                    b.HasOne("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Idea", "Idea")
+                        .WithMany("Votes")
+                        .HasForeignKey("IdeasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", "User")
+                        .WithMany("Votes")
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Idea");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Core.Abstractions.Models.User", b =>
+                {
+                    b.Navigation("Ideas");
+
+                    b.Navigation("Topics");
+
+                    b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Idea", b =>
+                {
+                    b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models.Topic", b =>
+                {
+                    b.Navigation("Ideas");
                 });
 #pragma warning restore 612, 618
         }

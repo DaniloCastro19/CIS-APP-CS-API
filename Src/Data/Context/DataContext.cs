@@ -38,10 +38,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.Description).HasMaxLength(255).IsRequired();
                 entity.Property(e => e.CreationDate).IsRequired();
 
-                entity.HasOne(t => t.User)  
-                    .WithMany(u => u.Topics) 
-                    .HasForeignKey(t => t.UsersId) 
-                    .OnDelete(DeleteBehavior.Cascade);
+
+                // entity.HasMany(i => i.Ideas)
+                //     .HasForeignKey(i => i.Idea)
+                //     .OnDelete(DeleteBehavior.Cascade);
+
             });
             
             modelBuilder.Entity<Idea>(entity =>
@@ -52,15 +53,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.Content).HasMaxLength(2000);
                 entity.Property(e => e.CreationDate).IsRequired();
 
-                entity.HasOne(i => i.User)
-                    .WithMany(u => u.Ideas) 
-                    .HasForeignKey(i => i.UsersId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(i => i.User) ¿Cómo hago esta relación?
+                //     .WithMany(u => u.Ideas) 
+                //     .HasForeignKey(i => i.UsersId)
+                //     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(i => i.Topic)
-                    .WithMany(t => t.Ideas) 
-                    .HasForeignKey(i => i.TopicsId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(i => i.Topic)
+                //     .WithMany(t => t.Ideas) 
+                //     .HasForeignKey(i => i.TopicsId)
+                //     .OnDelete(DeleteBehavior.Cascade);
             });
 
 
@@ -71,15 +72,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Data.Context
                 entity.Property(e => e.Id).HasMaxLength(36).IsRequired();
                 entity.Property(e => e.IsPositive).IsRequired();
 
-                entity.HasOne(v => v.User)
-                    .WithMany(u => u.Votes)
-                    .HasForeignKey(v => v.UsersId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(v => v.User)
+                //     .WithMany(u => u.Votes)
+                //     .HasForeignKey(v => v.UsersId)
+                //     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(v => v.Idea)
-                    .WithMany(i => i.Votes)
-                    .HasForeignKey(v => v.IdeasId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(v => v.Idea)
+                //     .WithMany(i => i.Votes)
+                //     .HasForeignKey(v => v.IdeasId)
+                //     .OnDelete(DeleteBehavior.Cascade);
             });
             base.OnModelCreating(modelBuilder);
         }

@@ -33,6 +33,7 @@ builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 builder.Services.AddScoped(typeof(OwnershipValidator<>));
+builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<ITopicService,TopicService>();
 builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<IVoteService, VoteService>();

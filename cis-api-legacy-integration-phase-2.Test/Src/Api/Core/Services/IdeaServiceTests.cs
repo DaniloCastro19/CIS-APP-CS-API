@@ -17,6 +17,10 @@ public class IdeaServiceTests
 {
     private readonly Mock<IIdeaRepository> _mockRepository;
     private readonly Mock<OwnershipValidator<Idea>> _mockOwnerValidator;
+    private readonly Mock<ITopicService> _mockTopicRepository;
+    private readonly Mock<IUserService> _mockUserService;
+
+
 
     private readonly IdeaService _service;
 
@@ -24,7 +28,10 @@ public class IdeaServiceTests
     {
         _mockRepository = new Mock<IIdeaRepository>();
         _mockOwnerValidator = new Mock<OwnershipValidator<Idea>>();
-        _service = new IdeaService(_mockRepository.Object, _mockOwnerValidator.Object);
+        _mockTopicRepository = new Mock<ITopicService>();
+        _mockUserService = new Mock<IUserService>();
+
+        _service = new IdeaService(_mockRepository.Object, _mockOwnerValidator.Object, _mockTopicRepository.Object,_mockUserService.Object);
     }
 
     [Fact]
@@ -32,7 +39,7 @@ public class IdeaServiceTests
     {
         var expectedIdeas = new List<Idea> { new Idea(), new Idea() };
         _mockRepository.Setup(repo => repo.GetAll()).ReturnsAsync(expectedIdeas);
-        var result = await _service.GetAll();
+        var result = await _service.GetAll(false);
         Assert.Equal(expectedIdeas, result);
     }
 
@@ -143,7 +150,7 @@ public class IdeaServiceTests
     public async Task GetAll_ShouldReturnEmptyList_WhenNoIdeasExist()
     {
         _mockRepository.Setup(repo => repo.GetAll()).ReturnsAsync(new List<Idea>());
-        var result = await _service.GetAll();
+        var result = await _service.GetAll(false);
         Assert.Empty(result);
     }
 

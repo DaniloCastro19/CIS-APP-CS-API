@@ -5,13 +5,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 {
-    public class IdeaRepository(DataContext context) : IIdeaRepository
+    public class IdeaRepository: IIdeaRepository
     {
         private DbSet<Idea> EntitySet => context.Set<Idea>();
-
-        public async Task<IEnumerable<Idea>> GetAll()
+        private readonly IVoteRepository _voteRepository;
+        DataContext context;
+        public IdeaRepository(DataContext Context, IVoteRepository voteRepository) {
+            context = Context;
+            _voteRepository = voteRepository;
+        }
+    
+        public async Task<IEnumerable<Idea>> GetAll(bool mostWanted)
         {
-            return await EntitySet.ToListAsync();
+            var ideas = await EntitySet.ToListAsync();
+
+            if (mostWanted)
+            {
+                return ideas.OrderByDescending(
+                    idea => _voteRepository.CountPositiveVotesByIdeaId(idea.Id).Result
+                ).ToList();
+            }
+            return ideas;
         }
 
         public async Task<Idea?> GetByID(Guid id) 
@@ -52,6 +66,12 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
         public async Task<IEnumerable<Idea>> GetByUser(string userId)
         {
             return await EntitySet.Where(idea => idea.UsersId == userId).ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<Idea>> GetAll()
+        {
+            return await EntitySet.ToListAsync();
 
         }
     }

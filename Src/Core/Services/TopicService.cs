@@ -1,4 +1,5 @@
 using System;
+using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
@@ -12,14 +13,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
     public class TopicService: ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly IUserService _userService;
         private readonly OwnershipValidator<Topic> _ownershipValidator;
 
 
-        public TopicService(ITopicRepository topicRepository, OwnershipValidator<Topic> ownershipValidator)
+        public TopicService(ITopicRepository topicRepository, OwnershipValidator<Topic> ownershipValidator, IUserService userService)
         {
             _topicRepository = topicRepository;
             _ownershipValidator = ownershipValidator;
-
+            _userService = userService;
         }
 
         public async Task<IEnumerable<Topic>> GetByTitle(string title)
@@ -44,13 +46,15 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
 
         public async Task<Topic> Create(TopicDTO entity, string userId)
         {
+            User user = await _userService.GetUserById(userId);
             var newTopic = new Topic
             {
                 Id = Guid.NewGuid().ToString(), 
                 Title = entity.Title,
                 Description = entity.Description,
                 CreationDate = DateTime.UtcNow, 
-                UsersId = userId
+                UsersId = userId,
+                OwnerLogin = user.Login
             };
             return await _topicRepository.Insert(newTopic);
         }
