@@ -31,7 +31,7 @@ test:
     - build
   script:
     - echo "Running tests..."
-    - cd cis-api-legacy-integration-phase-2/cis-api-legacy-integration-phase-2.Test  
+    - cd cis-api-legacy-integration-phase-2.Test  
     - dotnet test 
 
   rules:
