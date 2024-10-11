@@ -28,9 +28,9 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
 
         }
 
-        public async Task<IEnumerable<Idea>> GetAll()
+        public async Task<IEnumerable<Idea>> GetAll(bool mostWanted)
         {
-            return await _ideaRepository.GetAll();
+            return await _ideaRepository.GetAll(mostWanted);
         }
 
         public async Task<Idea?> GetByID(Guid id)

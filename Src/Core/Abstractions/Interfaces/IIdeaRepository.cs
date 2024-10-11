@@ -4,6 +4,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces
 {
     public interface IIdeaRepository:IRepositoryGeneric<Idea>
     {
+        Task<IEnumerable<Idea>> GetAll(bool mostWanted);
         Task<IEnumerable<Idea>> GetByUser(string userId);
         Task<int> CountIdeas(string id);
     }

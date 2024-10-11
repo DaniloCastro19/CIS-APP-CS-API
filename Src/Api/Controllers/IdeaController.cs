@@ -20,12 +20,11 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool mostWanted= false)
         {
-            var ideas = await _ideaService.GetAll();
+            var ideas = await _ideaService.GetAll(mostWanted);
             return Ok(ideas);
         }
-
         
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetByUser(Guid userId)

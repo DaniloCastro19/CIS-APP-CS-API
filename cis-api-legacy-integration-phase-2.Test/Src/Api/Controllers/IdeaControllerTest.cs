@@ -28,7 +28,7 @@ public class IdeaControllerTests
     public async Task GetAll_ReturnsOkResultWithIdeas()
     {
         var ideas = new List<Idea> { new Idea(), new Idea() };
-        _mockIdeaService.Setup(service => service.GetAll()).ReturnsAsync(ideas);
+        _mockIdeaService.Setup(service => service.GetAll(false)).ReturnsAsync(ideas);
 
         var result = await _controller.GetAll();
 
@@ -41,7 +41,7 @@ public class IdeaControllerTests
     public async Task GetAll_EmptyList_ReturnsOkResultWithEmptyList()
     {
         var emptyList = new List<Idea>();
-        _mockIdeaService.Setup(service => service.GetAll()).ReturnsAsync(emptyList);
+        _mockIdeaService.Setup(service => service.GetAll(false)).ReturnsAsync(emptyList);
 
         var result = await _controller.GetAll();
 

@@ -39,7 +39,7 @@ public class IdeaServiceTests
     {
         var expectedIdeas = new List<Idea> { new Idea(), new Idea() };
         _mockRepository.Setup(repo => repo.GetAll()).ReturnsAsync(expectedIdeas);
-        var result = await _service.GetAll();
+        var result = await _service.GetAll(false);
         Assert.Equal(expectedIdeas, result);
     }
 
@@ -150,7 +150,7 @@ public class IdeaServiceTests
     public async Task GetAll_ShouldReturnEmptyList_WhenNoIdeasExist()
     {
         _mockRepository.Setup(repo => repo.GetAll()).ReturnsAsync(new List<Idea>());
-        var result = await _service.GetAll();
+        var result = await _service.GetAll(false);
         Assert.Empty(result);
     }
 

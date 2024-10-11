@@ -51,6 +51,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
             }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var createdVote = await _voteService.Create(voteValue, userId, ideaId);
+            if(createdVote == null) return BadRequest("You have already vote this Idea");
             return Ok(createdVote);
         }
 
@@ -114,6 +115,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
         }
 
         [HttpGet("idea/{ideaId}/positive/count")]
+        
         public async Task<IActionResult> CountPositiveVotesByIdeaId(Guid ideaId)
         {
             var count = await _voteService.CountPositiveVotesByIdeaId(ideaId);

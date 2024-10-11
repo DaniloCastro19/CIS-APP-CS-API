@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Repository;
 using cis_api_legacy_integration_phase_2.Src.Data.Context;
@@ -14,6 +15,8 @@ public class IdeaRepositoryTests : IDisposable
 {
     private readonly DataContext _context;
     private readonly IdeaRepository _repository;
+    private readonly IVoteRepository _voteRepository;
+
 
     public IdeaRepositoryTests()
     {
@@ -22,7 +25,7 @@ public class IdeaRepositoryTests : IDisposable
             .Options;
 
         _context = new DataContext(options);
-        _repository = new IdeaRepository(_context);
+        _repository = new IdeaRepository(_context,_voteRepository);
     }
 
     [Fact]
