@@ -12,13 +12,6 @@ public class RepeatedVoteValidator
         var votesByUser = await voteRepository.GetVotesByUserId(userId);
         var votesByIdeas = await voteRepository.GetVotesByIdeaId(ideaId);
         List<Vote> relatedVotes= votesByUser.Where(vote => vote.IdeasId == ideaId).ToList();
-        
-
-        foreach(var vote in relatedVotes)
-        {
-            Console.WriteLine(vote);
-        }
-
         return relatedVotes.Count > 0;
     }
 }
