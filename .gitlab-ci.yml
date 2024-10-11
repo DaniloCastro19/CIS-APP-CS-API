@@ -14,10 +14,9 @@ build:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
   script:
-    - echo "Restoring dependencies..."
+    - echo "Compiling the code..."
     - dotnet restore
-    - echo "Building the project..."
-    - dotnet build --configuration $CONFIGURATION --no-restore
+    - echo "Compile complete."
   artifacts:
     paths:
       - bin/
