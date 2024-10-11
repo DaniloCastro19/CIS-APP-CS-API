@@ -1,6 +1,7 @@
 using cis_api_legacy_integration_phase_2.Core.Abstractions.Models;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Core.Validations;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
