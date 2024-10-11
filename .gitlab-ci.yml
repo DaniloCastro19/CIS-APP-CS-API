@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
 
 variables:
   DOTNET_VERSION: "8.0"
@@ -21,5 +22,16 @@ build:
     paths:
       - bin/
       - obj/
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
+  dependencies:
+    - build
+  script:
+    - echo "Running tests..."
+    - dotnet test --configuration $CONFIGURATION --no-build
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
