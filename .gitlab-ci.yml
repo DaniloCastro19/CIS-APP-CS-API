@@ -31,6 +31,7 @@ test:
     - build
   script:
     - echo "Running tests..."
-    - dotnet test --configuration $CONFIGURATION --no-build --test-adapter-path:. --logger:"console;verbosity=detailed"
+    - dotnet test cis-api-legacy-integration-phase-2/cis-api-legacy-integration-phase-2.Test/cis-api-legacy-integration-phase-2.Test.csproj --configuration $CONFIGURATION --no-build --logger:"console;verbosity=detailed"
+
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
