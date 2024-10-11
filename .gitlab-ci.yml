@@ -7,11 +7,8 @@ variables:
 
 before_script:
   - echo "Setting up .NET environment. Using $DOTNET_VERSION .NET version."
-  - echo "Detecting OS version..."
-  - cat /etc/os-release
-  - uname -a
   - apt-get update && apt-get install -y wget
-  - wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+  - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
   - dpkg -i packages-microsoft-prod.deb
   - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
 
