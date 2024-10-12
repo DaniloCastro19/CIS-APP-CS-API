@@ -17,7 +17,7 @@ build:
   script:
     - echo "Building Project..."
     - dotnet restore
-    - dotnet build --no-restore --configuration Release .\cis-api-legacy-integration-phase-2.csproj
+    - dotnet build --no-restore --configuration Release
   artifacts:
     paths:
       - bin/
