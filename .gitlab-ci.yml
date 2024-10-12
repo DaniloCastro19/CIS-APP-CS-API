@@ -11,6 +11,7 @@ before_script:
   - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
   - dpkg -i packages-microsoft-prod.deb
   - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+  - dotnet restore cis-api-legacy-integration-phase-2.Test/cis-api-legacy-integration-phase-2.Test.csproj
 
 build:
   stage: build
