@@ -16,8 +16,7 @@ build:
   stage: build
   script:
     - echo "Building Project..."
-    - dotnet restore
-    - dotnet build --no-restore --configuration Release
+    - dotnet build --configuration Release
   artifacts:
     paths:
       - bin/
