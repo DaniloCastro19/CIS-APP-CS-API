@@ -8,6 +8,7 @@
     <RootNamespace>cis_api_legacy_integration_phase_2</RootNamespace>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DefaultItemExcludes>$(DefaultItemExcludes);cis-api-legacy-integration-phase-2.Test/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
