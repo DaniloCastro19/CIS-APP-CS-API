@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+
+variables:
+  DOTNET_VERSION: "8.0"
+
+before_script:
+  - echo "Setting up .NET environment. Using $DOTNET_VERSION .NET version."
+  - apt-get update && apt-get install -y wget
+  - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+  - dpkg -i packages-microsoft-prod.deb
+  - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+
+build:
+  stage: build
+  script:
+    - echo "Building Project..."
+    - dotnet restore
+    - dotnet build --no-restore
+  artifacts:
+    paths:
+      - bin/
+      - obj/
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - echo "Running tests..."
+    - dotnet test 
+
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
