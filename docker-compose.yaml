@@ -13,9 +13,9 @@ services:
     ports:
       - "5001:5001"
     networks:
-      - network-sd3
+      - cis-app-network
     depends_on:
-      databasesd3:
+      cis_db:
         condition: service_healthy
 
 
@@ -35,7 +35,7 @@ services:
       timeout: 10s
       retries: 10
 
-  networks:
-    cis-app-network:
-      driver: bridge
-      name: cis-network
+networks:
+  cis-app-network:
+    driver: bridge
+    name: cis-network
