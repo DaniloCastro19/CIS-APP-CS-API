@@ -3,23 +3,22 @@ stages:
   - test
   - build-image
 
-variables:
-  DOTNET_VERSION: "8.0"
 
 workflow:
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
 
-before_script:
-  - echo "Setting up .NET environment. Using $DOTNET_VERSION .NET version."
-  - apt-get update && apt-get install -y wget
-  - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-  - dpkg -i packages-microsoft-prod.deb
-  - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+# before_script:
+#   - echo "Setting up .NET environment. Using $DOTNET_VERSION .NET version."
+#   - apt-get update && apt-get install -y wget
+#   - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+#   - dpkg -i packages-microsoft-prod.deb
+#   - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
 
 
 build:
   stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
     - echo "Building Project..."
     - dotnet restore
@@ -31,6 +30,7 @@ build:
 
 test:
   stage: test
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   dependencies:
     - build
   script:
