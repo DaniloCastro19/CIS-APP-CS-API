@@ -14,6 +14,12 @@ RUN dotnet build cis-api-legacy-integration-phase-2.csproj -c Release -o /app/bu
 FROM build as publish
 run dotnet publish 'cis-api-legacy-integration-phase-2.csproj' -c Release -o /app/publish
 
+ENV SERVER=
+ENV PORT=
+ENV DATABASE=
+ENV USER=
+ENV PASSWORD=
+
 #Running
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 ENV ASPNETCORE_HTTP_PORTS=5001
