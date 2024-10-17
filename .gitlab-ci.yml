@@ -4,10 +4,9 @@ stages:
   - prepare-version
   - build-image
 
-
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_MERGE_REQUEST_ID'
 
 
 build:
