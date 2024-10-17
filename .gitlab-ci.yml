@@ -9,7 +9,7 @@ workflow:
     - if: '$CI_MERGE_REQUEST_ID'
 
 
-build:
+.build:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
@@ -21,7 +21,7 @@ build:
       - bin/
       - obj/
 
-test:
+.test:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:8.0
   dependencies:
