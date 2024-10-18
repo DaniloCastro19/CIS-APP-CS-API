@@ -61,9 +61,9 @@ preparing-image:
 
 deploy-app:
   stage: deploy
-  image: mcr.microsoft.com/dotnet/sdk:8.0
+  image: docker/compose:latest
+  services:
+  - docker:dind
   script:
     - echo 'Deploying app'
     - SERVER=$DATABASE_SERVER_CONNECTION DATABASE=$DATABASE_NAME USER=$DATABASE_USERNAME PORT=$DATABASE_CONNECTION_PORT PASSWORD=$DATABASE_PASSWORD GITLAB_REGISTRY_CIS_URL=$CIS_CONTAINER_REGISTRY_URL GITLAB_REGISTRY_USERS_URL=$GITLAB_REGISTRY_USERS_URL MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD docker-compose up --force-recreate -d
-
-
