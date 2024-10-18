@@ -52,6 +52,7 @@ preparing-image:
     - echo 'Build docker image for API deploy'
     - echo $CIS_CONTAINER_REGISTRY_URL
     - VERSION=$(cat current_version.txt)
+    - echo $VERSION
     - docker login registry.gitlab.com -u $GITLAB_REGISTRY_USERNAME -p $GITLAB_REGISTRY_PASSWORD
     - docker build -t $CIS_CONTAINER_REGISTRY_URL:$VERSION .
     - docker tag -t $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
