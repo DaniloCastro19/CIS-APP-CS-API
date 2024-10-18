@@ -12,8 +12,8 @@ services:
       PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "5001:5001"
-    # networks:
-    #   - cis-app-network
+    networks:
+      - cis-app-network
     depends_on:
       cis_db:
         condition: service_healthy
@@ -28,14 +28,14 @@ services:
     ports:
       - "3307:3306"
     restart: always
-    # networks:
-    #   - cis-app-network
+    networks:
+      - cis-app-network
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 10s
       retries: 10
 
-# networks:
-#   cis-app-network:
-#     driver: bridge
-#     name: cis-network
+networks:
+  cis-app-network:
+    driver: bridge
+    name: cis-network
