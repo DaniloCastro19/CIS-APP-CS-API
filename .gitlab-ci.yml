@@ -3,6 +3,7 @@ stages:
   - test
   - prepare-version
   - build-image
+  - deploy
 
 workflow:
   rules:
@@ -57,3 +58,13 @@ preparing-image:
     - docker build -t $CIS_CONTAINER_REGISTRY_URL:$VERSION .
     - docker tag $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
     - docker push $CIS_CONTAINER_REGISTRY_URL:latest
+
+deploy-app:
+  stage: deploy
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo 'Deploying app'
+    - SERVER=$DATABASE_SERVER_CONNECTION DATABASE=$DATABASE_NAME USER=$DATABASE_USERNAME PORT=$DATABASE_CONNECTION_PORT PASSWORD=$DATABASE_PASSWORD GITLAB_REGISTRY_CIS_URL=$CIS_CONTAINER_REGISTRY_URL GITLAB_REGISTRY_USERS_URL=$GITLAB_REGISTRY_USERS_URL MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD docker-compose up --force-recreate -d
+  tags:
+  - luna-runner
+
