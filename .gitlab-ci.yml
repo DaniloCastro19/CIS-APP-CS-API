@@ -55,5 +55,5 @@ preparing-image:
     - echo $VERSION
     - docker login registry.gitlab.com -u $GITLAB_REGISTRY_USERNAME -p $GITLAB_REGISTRY_PASSWORD
     - docker build -t $CIS_CONTAINER_REGISTRY_URL:$VERSION .
-    - docker tag -t $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
+    - docker tag $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
     - docker push $CIS_CONTAINER_REGISTRY_URL:latest
