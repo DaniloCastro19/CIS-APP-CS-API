@@ -1,19 +1,17 @@
 stages:
   - build
   - test
+  - prepare-version
+  - build-image
+  - deploy
 
-variables:
-  DOTNET_VERSION: "8.0"
-
-before_script:
-  - echo "Setting up .NET environment. Using $DOTNET_VERSION .NET version."
-  - apt-get update && apt-get install -y wget
-  - wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-  - dpkg -i packages-microsoft-prod.deb
-  - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
 
 build:
   stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
     - echo "Building Project..."
     - dotnet restore
@@ -22,16 +20,51 @@ build:
     paths:
       - bin/
       - obj/
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID'
 
 test:
   stage: test
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   dependencies:
     - build
   script:
     - echo "Running tests..."
     - dotnet test 
 
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID'
+preparing-version:
+    stage: prepare-version
+    image: ubuntu:22.04
+    script:
+      - apt-get update
+      - apt-get install git -y
+      - git config --global user.email "$GIT_EMAIL"
+      - git config --global user.email "$GIT_USER"
+      - git fetch --tags
+      - git tag -l | tr -d v | sort -V | tail -n 1 > current_version.txt
+    artifacts:
+      paths:
+        - current_version.txt
+
+preparing-image:
+  stage: build-image
+  services:
+    - docker:dind
+  image: docker:latest
+  script:
+    - echo 'Build docker image for API deploy'
+    - echo $CIS_CONTAINER_REGISTRY_URL
+    - VERSION=$(cat current_version.txt)
+    - echo $VERSION
+    - docker login registry.gitlab.com -u $GITLAB_REGISTRY_USERNAME -p $GITLAB_REGISTRY_PASSWORD
+    - docker build -t $CIS_CONTAINER_REGISTRY_URL:$VERSION .
+    - docker tag $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
+    - docker push $CIS_CONTAINER_REGISTRY_URL:latest
+
+deploy-app:
+  stage: deploy
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo 'Deploying app'
+    - docker-compose --version
+    - SERVER=$DATABASE_SERVER_CONNECTION DATABASE=$DATABASE_NAME USER=$DATABASE_USERNAME PORT=$DATABASE_CONNECTION_PORT PASSWORD=$DATABASE_PASSWORD GITLAB_REGISTRY_CIS_URL=$CIS_CONTAINER_REGISTRY_URL GITLAB_REGISTRY_USERS_URL=$GITLAB_REGISTRY_USERS_URL MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD docker-compose up --force-recreate -d
+  tags:
+    - shark-runner2.0

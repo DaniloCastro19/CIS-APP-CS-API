@@ -1,0 +1,41 @@
+
+services:
+
+  cis_app:
+    build: .
+    container_name: cis_api
+    environment:
+      SERVER: sd3db
+      PORT: ${DATABASE_CONNECTION_PORT}
+      DATABASE: sd3
+      USER: ${DATABASE_USERNAME}
+      PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5001:5001"
+    networks:
+      - cis-app-network
+    depends_on:
+      cis_db:
+        condition: service_healthy
+
+
+  cis_db:
+    image: mysql:8.0
+    container_name: sd3db
+    environment:
+      MYSQL_DATABASE: sd3
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    restart: always
+    networks:
+      - cis-app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+
+networks:
+  cis-app-network:
+    driver: bridge
+    name: cis-network
