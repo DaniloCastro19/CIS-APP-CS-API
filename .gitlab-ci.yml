@@ -65,10 +65,10 @@ deploy-app:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
-    - apt-get update
-    - apt-get install -y curl
-    - curl -L "https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    - chmod +x /usr/local/bin/docker-compose
+    # - apt-get update
+    # - apt-get install -y curl
+    # - curl -L "https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    # - chmod +x /usr/local/bin/docker-compose
     - echo 'Deploying app'
     - docker-compose --version
     - SERVER=$DATABASE_SERVER_CONNECTION DATABASE=$DATABASE_NAME USER=$DATABASE_USERNAME PORT=$DATABASE_CONNECTION_PORT PASSWORD=$DATABASE_PASSWORD GITLAB_REGISTRY_CIS_URL=$CIS_CONTAINER_REGISTRY_URL GITLAB_REGISTRY_USERS_URL=$GITLAB_REGISTRY_USERS_URL MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD docker-compose up --force-recreate -d
