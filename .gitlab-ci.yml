@@ -9,7 +9,7 @@ workflow:
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
 
-.build:
+build:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
@@ -21,7 +21,7 @@ workflow:
       - bin/
       - obj/
 
-.test:
+test:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:8.0
   dependencies:
@@ -30,7 +30,7 @@ workflow:
     - echo "Running tests..."
     - dotnet test 
 
-.preparing-version:
+preparing-version:
     stage: prepare-version
     image: ubuntu:22.04
     script:
@@ -44,7 +44,7 @@ workflow:
       paths:
         - current_version.txt
 
-.preparing-image:
+preparing-image:
   stage: build-image
   services:
     - docker:dind
@@ -59,20 +59,12 @@ workflow:
     - docker tag $CIS_CONTAINER_REGISTRY_URL:$VERSION $CIS_CONTAINER_REGISTRY_URL:latest
     - docker push $CIS_CONTAINER_REGISTRY_URL:latest
 
-variables:
-  GIT_DEPTH: "1"
 deploy-app:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
-    # - apt-get update
-    # - apt-get install -y curl
-    # - curl -L "https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    # - chmod +x /usr/local/bin/docker-compose
     - echo 'Deploying app'
     - docker-compose --version
     - SERVER=$DATABASE_SERVER_CONNECTION DATABASE=$DATABASE_NAME USER=$DATABASE_USERNAME PORT=$DATABASE_CONNECTION_PORT PASSWORD=$DATABASE_PASSWORD GITLAB_REGISTRY_CIS_URL=$CIS_CONTAINER_REGISTRY_URL GITLAB_REGISTRY_USERS_URL=$GITLAB_REGISTRY_USERS_URL MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD docker-compose up --force-recreate -d
-  timeout: 20m
   tags:
     - shark-runner2.0
-    
