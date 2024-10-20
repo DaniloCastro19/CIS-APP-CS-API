@@ -18,12 +18,10 @@ public class TopicApiClient
             BaseAddress = new Uri(baseAddress)
         };
 
-        // Set Basic Authentication
         var byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
     }
 
-    // Method to get all topics
     public async Task<IEnumerable<Topic>> GetAllTopicsAsync()
     {
         var response = await _httpClient.GetAsync("api/topics");
@@ -31,23 +29,23 @@ public class TopicApiClient
         return await response.Content.ReadAsAsync<IEnumerable<Topic>>();
     }
 
-    // Method to get a topic by ID
-    public async Task<Topic> GetTopicByIdAsync(Guid id)
+
+    public async Task<Topic> GetTopicByIdAsync(string id)
     {
         var response = await _httpClient.GetAsync($"api/topics/{id}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsAsync<Topic>();
     }
 
-    // Method to get topics by user ID
-    public async Task<IEnumerable<Topic>> GetByUserAsync(Guid userId)
+
+    public async Task<IEnumerable<Topic>> GetByUserAsync(string userId)
     {
         var response = await _httpClient.GetAsync($"api/topics/users/{userId}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsAsync<IEnumerable<Topic>>();
     }
 
-    // Method to create a new topic
+
     public async Task<Topic> CreateTopicAsync(TopicDTO topicDTO)
     {
         var response = await _httpClient.PostAsJsonAsync("api/topics", topicDTO);
@@ -55,15 +53,15 @@ public class TopicApiClient
         return await response.Content.ReadAsAsync<Topic>();
     }
 
-    // Method to update an existing topic
-    public async Task UpdateTopicAsync(Guid id, TopicDTO topicDTO)
+
+    public async Task UpdateTopicAsync(string id, TopicDTO topicDTO)
     {
         var response = await _httpClient.PutAsJsonAsync($"api/topics/{id}", topicDTO);
         response.EnsureSuccessStatusCode();
     }
 
-    // Method to delete a topic
-    public async Task DeleteTopicAsync(Guid id)
+
+    public async Task DeleteTopicAsync(string id)
     {
         var response = await _httpClient.DeleteAsync($"api/topics/{id}");
         response.EnsureSuccessStatusCode();
