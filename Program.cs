@@ -13,6 +13,7 @@ using cis_api_legacy_integration_phase_2.Src.Core.Validations;
 
 using System;
 using cis_api_legacy_integration_phase_2.Src.Core.Utils;
+using cis_api_legacy_integration_phase_2.Src.Data.Config;
 var builder = WebApplication.CreateBuilder(args);
 
 //env variables initialization
@@ -22,11 +23,14 @@ var PORT = Environment.GetEnvironmentVariable("PORT");
 var DATABASE = Environment.GetEnvironmentVariable("DATABASE");
 var USER = Environment.GetEnvironmentVariable("USER");
 var PASSWORD = Environment.GetEnvironmentVariable("PASSWORD");
+string MONGODB_URI = Environment.GetEnvironmentVariable("MONGODB_URI");
+string DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE").ToString();
+
 
 // DbContext Configuration
-var MySqlConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(MySqlConnectionString, new MySqlServerVersion(new Version(8, 0, 21)))); 
+DbConfigurator dbConfigurator = new DbConfigurator(builder);
+var ConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
+builder = dbConfigurator.CreateContext(ConnectionString, DB_TYPE);
 
 // Registry necessary repositories and services
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
