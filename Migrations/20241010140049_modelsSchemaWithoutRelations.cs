@@ -47,26 +47,26 @@ namespace cis_api_legacy_integration_phase_2.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "IdeasId",
                 table: "votes",
-                type: "longtext",
+                type: "varchar(36)",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "varchar(36)")
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "IdeaName",
-            //     table: "votes",
-            //     type: "longtext",
-            //     nullable: false)
-            //     .Annotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.AddColumn<string>(
+                name: "IdeaName",
+                table: "votes",
+                type: "longtext",
+                nullable: false)
+                .Annotation("MySql:CharSet", "utf8mb4");
 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "OwnerLogin",
-            //     table: "votes",
-            //     type: "longtext",
-            //     nullable: false)
-            //     .Annotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.AddColumn<string>(
+                name: "OwnerLogin",
+                table: "votes",
+                type: "longtext",
+                nullable: false)
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UsersId",
@@ -81,7 +81,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "TopicsId",
                 table: "ideas",
-                type: "longtext",
+                type: "varchar(36)",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "varchar(36)")
@@ -91,14 +91,14 @@ namespace cis_api_legacy_integration_phase_2.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "OwnerLogin",
                 table: "ideas",
-                type: "longtext",
+                type: "varchar(16)",
                 nullable: false)
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.AddColumn<string>(
                 name: "TopicName",
                 table: "ideas",
-                type: "longtext",
+                type: "varchar(100)",
                 nullable: false)
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
