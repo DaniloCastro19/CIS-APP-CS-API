@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Interfaces;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_api_legacy_integration_phase_2.Src.Data.Config;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
     {
         private readonly IIdeaService _ideaService;
 
-        public IdeaController(IIdeaService ideaService)
+        public IdeaController(IIdeaService ideaService, MongoConfig mongoConfig)
         {
             _ideaService = ideaService;
         }

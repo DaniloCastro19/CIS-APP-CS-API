@@ -23,19 +23,17 @@ var PORT = Environment.GetEnvironmentVariable("PORT");
 var DATABASE = Environment.GetEnvironmentVariable("DATABASE");
 var USER = Environment.GetEnvironmentVariable("USER");
 var PASSWORD = Environment.GetEnvironmentVariable("PASSWORD");
-string MONGODB_URI = Environment.GetEnvironmentVariable("MONGODB_URI");
+string MONGODB_URI = Environment.GetEnvironmentVariable("MONGODB_URI").ToString();
 string DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE").ToString();
 
 
 // DbContext Configuration
 DbConfigurator dbConfigurator = new DbConfigurator(builder);
 var ConnectionString = $"server={SERVER};port={PORT};database={DATABASE};uid={USER};password={PASSWORD};";
-builder = dbConfigurator.CreateContext(ConnectionString, DB_TYPE);
+builder = dbConfigurator.CreateContext(ConnectionString, DB_TYPE, MONGODB_URI);
 
 // Registry necessary repositories and services
-builder.Services.AddScoped<ITopicRepository, TopicRepository>();
-builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
-builder.Services.AddScoped<IVoteRepository, VoteRepository>();
+
 builder.Services.AddScoped(typeof(OwnershipValidator<>));
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<ITopicService,TopicService>();
