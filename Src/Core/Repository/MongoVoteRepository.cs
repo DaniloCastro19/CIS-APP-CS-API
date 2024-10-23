@@ -13,46 +13,52 @@ public class MongoVoteRepository : IVoteRepository
 
     public MongoVoteRepository(MongoConfig mongoConfig){
         _database = mongoConfig.GetDatabase();
-        _collection = _database.GetCollection<Vote>("bote");
+        _collection = _database.GetCollection<Vote>("votes");
     }
-    public Task<int> CountNegativeVotesByIdeaId(string ideaId)
+    public async Task<int> CountNegativeVotesByIdeaId(string ideaId)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<int> CountPositiveVotesByIdeaId(string ideaId)
-    {
-        throw new NotImplementedException();
+        int count = (int) await _collection.CountDocumentsAsync(vote => vote.IdeasId == ideaId && vote.IsPositive == false);
+        return count;
     }
 
-    public Task Delete(Guid id)
+    public async Task<int> CountPositiveVotesByIdeaId(string ideaId)
     {
-        throw new NotImplementedException();
+       int count = (int) await _collection.CountDocumentsAsync(vote => vote.IdeasId == ideaId && vote.IsPositive == true);
+       return count;
     }
 
-    public Task<IEnumerable<Vote>> GetAll()
-    {
-        throw new NotImplementedException();
+    public async Task Delete(Guid id)
+    {  
+        string idToString = id.ToString();
+        await _collection.DeleteOneAsync(vote => vote.Id == idToString);
     }
 
-    public Task<Vote> GetByID(Guid id)
+    public async Task<IEnumerable<Vote>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _collection.Find(_ => true).ToListAsync();
     }
 
-    public Task<IEnumerable<Vote>> GetVotesByIdeaId(string ideaId)
+    public async Task<Vote> GetByID(Guid id)
     {
-        throw new NotImplementedException();
+        var idToString = id.ToString(); 
+        var vote = await _collection.Find(vote => vote.Id == idToString).FirstOrDefaultAsync(); 
+        return vote;
     }
 
-    public Task<IEnumerable<Vote>> GetVotesByUserId(string userId)
+    public async Task<IEnumerable<Vote>> GetVotesByIdeaId(string ideaId)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(vote => vote.IdeasId == ideaId).ToListAsync(); 
     }
 
-    public Task<Vote> Insert(Vote entity)
+    public async Task<IEnumerable<Vote>> GetVotesByUserId(string userId)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(vote => vote.UsersId == userId).ToListAsync();
+    }
+
+    public async Task<Vote> Insert(Vote entity)
+    {
+        await _collection.InsertOneAsync(entity); 
+        return entity;
     }
 
     public Task Save()
@@ -60,8 +66,8 @@ public class MongoVoteRepository : IVoteRepository
         throw new NotImplementedException();
     }
 
-    public Task Update(Vote entity)
+    public async Task Update(Vote entity)
     {
-        throw new NotImplementedException();
+        await _collection.ReplaceOneAsync(vote => vote.Id == entity.Id, entity);
     }
 }
