@@ -10,10 +10,13 @@ public class MongoIdeaRepository: IIdeaRepository
 {
     protected readonly IMongoDatabase _database;
     protected readonly IMongoCollection<Idea> _collection;
+    private readonly IVoteRepository _voteRepository;
 
-    public MongoIdeaRepository(MongoConfig mongoConfig){
+
+    public MongoIdeaRepository(MongoConfig mongoConfig, IVoteRepository voteRepository){
         _database = mongoConfig.GetDatabase();
         _collection = _database.GetCollection<Idea>("ideas");
+        _voteRepository = voteRepository;
     }
 
     public Task<int> CountIdeas(string id)
@@ -21,34 +24,45 @@ public class MongoIdeaRepository: IIdeaRepository
         throw new NotImplementedException();
     }
 
-    public Task Delete(Guid id)
+    public async Task Delete(Guid id)
+    {
+        string idToString = id.ToString();
+        await _collection.DeleteOneAsync(idea => idea.Id == idToString);
+    }
+
+    public async Task<IEnumerable<Idea>> GetAll(bool mostWanted)
+    {
+        var ideas = await _collection.Find(_ => true).ToListAsync();
+        if(mostWanted)
+        {
+            return ideas.OrderByDescending(
+                idea => _voteRepository.CountPositiveVotesByIdeaId(idea.Id).Result
+            ).ToList();
+        }
+        return ideas;
+    }
+
+    public async Task<IEnumerable<Idea>> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Idea>> GetAll(bool mostWanted)
+    public async Task<Idea> GetByID(Guid id)
     {
-        throw new NotImplementedException();
+        var idToString = id.ToString(); 
+        var idea = await _collection.Find(idea => idea.Id == idToString).FirstOrDefaultAsync(); 
+        return idea;
     }
 
-    public Task<IEnumerable<Idea>> GetAll()
+    public async Task<IEnumerable<Idea>> GetByUser(string userId)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(idea => idea.UsersId == userId).ToListAsync();
     }
 
-    public Task<Idea> GetByID(Guid id)
+    public async Task<Idea> Insert(Idea entity)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Idea>> GetByUser(string userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Idea> Insert(Idea entity)
-    {
-        throw new NotImplementedException();
+        await _collection.InsertOneAsync(entity); 
+        return entity;
     }
 
     public Task Save()
@@ -56,8 +70,9 @@ public class MongoIdeaRepository: IIdeaRepository
         throw new NotImplementedException();
     }
 
-    public Task Update(Idea entity)
+    public async Task Update(Idea entity)
     {
-        throw new NotImplementedException();
+        await _collection.ReplaceOneAsync(idea => idea.Id == entity.Id, entity);
     }
 }
+    
