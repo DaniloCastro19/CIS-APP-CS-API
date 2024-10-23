@@ -15,7 +15,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Api.Controllers
     {
         private readonly IIdeaService _ideaService;
 
-        public IdeaController(IIdeaService ideaService, MongoConfig mongoConfig)
+        public IdeaController(IIdeaService ideaService)
         {
             _ideaService = ideaService;
         }
