@@ -15,39 +15,44 @@ public class MongoTopicRepository : ITopicRepository
         _database = mongoConfig.GetDatabase();
         _collection = _database.GetCollection<Topic>("topics");
     }
-    public Task<int> CountTopics()
+    public async Task<int> CountTopics()
     {
-        throw new NotImplementedException();
+        int count = (int)await _collection.CountDocumentsAsync(FilterDefinition<Topic>.Empty);
+        return count;
     }
 
-    public Task Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        throw new NotImplementedException();
+        string idToString = id.ToString();
+        await _collection.DeleteOneAsync(topic => topic.Id == idToString);
     }
 
-    public Task<IEnumerable<Topic>> GetAll()
+    public async Task<IEnumerable<Topic>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _collection.Find(_ => true).ToListAsync();
     }
 
-    public Task<Topic> GetByID(Guid id)
+    public async Task<Topic> GetByID(Guid id)
     {
-        throw new NotImplementedException();
+        var idToString = id.ToString(); 
+        var topic = await _collection.Find(topic => topic.Id == idToString).FirstOrDefaultAsync(); 
+        return topic;
     }
 
-    public Task<IEnumerable<Topic>> GetByTitle(string title)
+    public async Task<IEnumerable<Topic>> GetByTitle(string title)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(topic => topic.Title == title).ToListAsync();
     }
 
-    public Task<IEnumerable<Topic>> GetByUser(string userId)
+    public async Task<IEnumerable<Topic>> GetByUser(string userId)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(topic => topic.UsersId == userId).ToListAsync();
     }
 
-    public Task<Topic> Insert(Topic entity)
+    public async Task<Topic> Insert(Topic entity)
     {
-        throw new NotImplementedException();
+        await _collection.InsertOneAsync(entity); 
+        return entity;
     }
 
     public Task Save()
@@ -55,8 +60,8 @@ public class MongoTopicRepository : ITopicRepository
         throw new NotImplementedException();
     }
 
-    public Task Update(Topic entity)
+    public async Task Update(Topic entity)
     {
-        throw new NotImplementedException();
+        await _collection.ReplaceOneAsync(topic => topic.Id == entity.Id, entity);
     }
 }
