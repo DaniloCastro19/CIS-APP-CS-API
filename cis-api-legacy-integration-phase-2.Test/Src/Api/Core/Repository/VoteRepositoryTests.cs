@@ -31,8 +31,8 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         {
             var votes = new List<Vote>
             {
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2",  UsersId = "user2",OwnerLogin = "user2", IsPositive = false }
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2",  UserId = "user2",OwnerLogin = "user2", IsPositive = false }
             };
             await _context.Set<Vote>().AddRangeAsync(votes);
             await _context.SaveChangesAsync();
@@ -47,7 +47,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         public async Task GetByID_ShouldReturnCorrectVote()
         {
             var voteId = Guid.NewGuid();
-            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1",OwnerLogin = "user1", IsPositive = true };
+            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1",OwnerLogin = "user1", IsPositive = true };
             await _context.Set<Vote>().AddAsync(vote);
             await _context.SaveChangesAsync();
 
@@ -60,7 +60,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         [Fact]
         public async Task Insert_ShouldAddNewVote()
         {
-            var newVote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true };
+            var newVote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true };
 
             var result = await _repository.Insert(newVote);
 
@@ -72,7 +72,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         [Fact]
         public async Task Update_ShouldModifyExistingVote()
         {
-            var vote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true };
+            var vote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true };
             await _context.Set<Vote>().AddAsync(vote);
             await _context.SaveChangesAsync();
 
@@ -88,7 +88,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         public async Task Delete_ShouldRemoveVote()
         {
             var voteId = Guid.NewGuid();
-            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true };
+            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true };
             await _context.Set<Vote>().AddAsync(vote);
             await _context.SaveChangesAsync();
 
@@ -104,9 +104,9 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
             var userId = "user1";
             var votes = new List<Vote>
             {
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = userId, OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2", UsersId = userId, OwnerLogin = "user1", IsPositive = false },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea3", IdeaName = "Name 3", UsersId = "other_user", OwnerLogin = "user1", IsPositive = true }
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = userId, OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2", UserId = userId, OwnerLogin = "user1", IsPositive = false },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea3", IdeaName = "Name 3", UserId = "other_user", OwnerLogin = "user1", IsPositive = true }
             };
             await _context.Set<Vote>().AddRangeAsync(votes);
             await _context.SaveChangesAsync();
@@ -114,7 +114,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
             var result = await _repository.GetVotesByUserId(userId);
 
             Assert.Equal(2, result.Count());
-            Assert.All(result, vote => Assert.Equal(userId, vote.UsersId));
+            Assert.All(result, vote => Assert.Equal(userId, vote.UserId));
         }
 
         [Fact]
@@ -123,9 +123,9 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
             var ideaId = "idea1";
             var votes = new List<Vote>
             {
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user2", OwnerLogin = "user1", IsPositive = false },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2",  UsersId = "user3", OwnerLogin = "user1", IsPositive = true }
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user2", OwnerLogin = "user1", IsPositive = false },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2",  UserId = "user3", OwnerLogin = "user1", IsPositive = true }
             };
             await _context.Set<Vote>().AddRangeAsync(votes);
             await _context.SaveChangesAsync();
@@ -142,9 +142,9 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
             var ideaId = "idea1";
             var votes = new List<Vote>
             {
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user2", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2", UsersId = "user3", OwnerLogin = "user1", IsPositive = false }
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user2", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea2", IdeaName = "Name 2", UserId = "user3", OwnerLogin = "user1", IsPositive = false }
             };
             await _context.Set<Vote>().AddRangeAsync(votes);
             await _context.SaveChangesAsync();
@@ -160,9 +160,9 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
             var ideaId = "idea1";
             var votes = new List<Vote>
             {
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = false },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user2", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UsersId = "user3", OwnerLogin = "user1", IsPositive = false }
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = false },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user2", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = Guid.NewGuid().ToString(), IdeasId = ideaId, IdeaName = "Name 1", UserId = "user3", OwnerLogin = "user1", IsPositive = false }
             };
             await _context.Set<Vote>().AddRangeAsync(votes);
             await _context.SaveChangesAsync();
@@ -184,7 +184,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Core.Repository
         [Fact]
         public async Task Update_ShouldThrowException_WhenVoteDoesNotExist()
         {
-            var nonExistentVote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true };
+            var nonExistentVote = new Vote { Id = Guid.NewGuid().ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true };
             await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => await _repository.Update(nonExistentVote));
         }
 

@@ -46,7 +46,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
             {
                 Id = Guid.NewGuid().ToString(),
                 IsPositive = voteValue,
-                UsersId = userID,
+                UserId = userID,
                 OwnerLogin = user.Login,
                 IdeasId = ideaToString,
                 IdeaName= idea.Title

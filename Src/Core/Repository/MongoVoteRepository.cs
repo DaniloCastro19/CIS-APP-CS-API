@@ -52,7 +52,7 @@ public class MongoVoteRepository : IVoteRepository
 
     public async Task<IEnumerable<Vote>> GetVotesByUserId(string userId)
     {
-        return await _collection.Find(vote => vote.UsersId == userId).ToListAsync();
+        return await _collection.Find(vote => vote.UserId == userId).ToListAsync();
     }
 
     public async Task<Vote> Insert(Vote entity)

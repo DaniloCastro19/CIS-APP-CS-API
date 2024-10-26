@@ -102,8 +102,8 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Abstractions.Inte
             var userId = Guid.NewGuid().ToString();
             var mockTopics = new List<Topic>
             {
-                new Topic { Id = Guid.NewGuid().ToString(), Title = "User Topic 1", Description = "Description 1", UsersId = userId },
-                new Topic { Id = Guid.NewGuid().ToString(), Title = "User Topic 2", Description = "Description 2", UsersId = userId }
+                new Topic { Id = Guid.NewGuid().ToString(), Title = "User Topic 1", Description = "Description 1", UserId = userId },
+                new Topic { Id = Guid.NewGuid().ToString(), Title = "User Topic 2", Description = "Description 2", UserId = userId }
             };
 
             _mockTopicRepository.Setup(repo => repo.GetByUser(userId))

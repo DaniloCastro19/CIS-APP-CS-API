@@ -69,7 +69,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
                 Title= entity.Title,
                 Content = entity.Content,
                 CreationDate = DateTime.UtcNow,
-                UsersId = userID,
+                UserId = userID,
                 TopicsId = topicIdToString,
                 OwnerLogin = user.Login,
                 TopicName = topic.Title

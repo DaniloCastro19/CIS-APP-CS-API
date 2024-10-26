@@ -22,7 +22,7 @@ public class OwnershipValidator<T> where T:class, IHasUserId
             throw new KeyNotFoundException("Not found.");
         }
 
-        if (entity.UsersId != userId)
+        if (entity.UserId != userId)
         {
             throw new UnauthorizedAccessException("Action not allowed. Please, verify ownership.");
         }

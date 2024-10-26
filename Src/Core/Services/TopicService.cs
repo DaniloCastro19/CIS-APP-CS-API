@@ -53,7 +53,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Services
                 Title = entity.Title,
                 Description = entity.Description,
                 CreationDate = DateTime.UtcNow, 
-                UsersId = userId,
+                UserId = userId,
                 OwnerLogin = user.Login
             };
             return await _topicRepository.Insert(newTopic);

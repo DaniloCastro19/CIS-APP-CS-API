@@ -11,7 +11,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public bool IsPositive { get; set; }
-        public string UsersId { get; set; }
+        public string UserId { get; set; }
         public string OwnerLogin { get; set; }
 
         public string IdeasId { get; set; }

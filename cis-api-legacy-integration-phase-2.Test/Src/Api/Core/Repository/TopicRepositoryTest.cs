@@ -39,7 +39,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Repository
                 Title = "Topic 1",
                 Description = "Description for Topic 1",
                 OwnerLogin = "owner1",
-                UsersId = "user1",
+                UserId = "user1",
                 CreationDate = DateTime.Now
             },
             new Topic
@@ -48,7 +48,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Repository
                 Title = "Topic 2",
                 Description = "Description for Topic 2",
                 OwnerLogin = "owner2",
-                UsersId = "user2",
+                UserId = "user2",
                 CreationDate = DateTime.Now
             }
         };
@@ -97,7 +97,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Repository
                 Title = "Topic 3",
                 Description = "Description for Topic 3",
                 OwnerLogin = "owner3",
-                UsersId = "user3",
+                UserId = "user3",
                 CreationDate = DateTime.Now
             };
 
