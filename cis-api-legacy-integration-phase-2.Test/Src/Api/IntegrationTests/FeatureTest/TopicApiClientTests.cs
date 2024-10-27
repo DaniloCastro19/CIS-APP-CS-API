@@ -9,15 +9,35 @@ using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
 
 public class TopicApiClientTests
 {
+    private readonly UserApiClient _userApiClient;
+    private readonly string _username;
+    private readonly string _password;
     private readonly TopicApiClient _apiClient;
     
     public TopicApiClientTests()
     {
         var baseAddress = "http://localhost:5141/";
-        var username = "testlogin2";
-        var password = "123456789a";
+        var baseAddressUsers = "http://localhost:4000/";
 
-        _apiClient = new TopicApiClient(baseAddress, username, password);
+        _username = $"Login_Name_{Guid.NewGuid()}";
+        _password = Guid.NewGuid().ToString();
+        var name = $"User_{Guid.NewGuid()}";
+
+        _userApiClient = new UserApiClient(baseAddressUsers, "root", "root");
+        _apiClient = new TopicApiClient(baseAddress, _username, _password);
+
+        CreateUserAsync(name, _username, _password).Wait();
+    }
+
+    private async Task CreateUserAsync(string name, string login, string password)
+    {
+        var userId = Guid.NewGuid().ToString();
+        var response = await _userApiClient.CreateUserAsync(name, login, password);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Error when creating the user in the tests");
+        }
     }
     
     [Fact]
@@ -97,9 +117,6 @@ public class TopicApiClientTests
         var retrievedTopic = await _apiClient.GetTopicByIdAsync(createdTopic.Id);
         retrievedTopic.Should().NotBeNull();
         retrievedTopic.Title.Should().Be(topicDto.Title);
-
-
-        await _apiClient.DeleteTopicAsync(createdTopic.Id);
     }
 
     [Fact]
