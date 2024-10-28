@@ -34,8 +34,8 @@ public class IdeaRepositoryTests : IDisposable
     {
         var ideas = new List<Idea>
         {
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 1", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" },
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 2", CreationDate = DateTime.Now, UsersId = "user2", TopicsId = "topic2", OwnerLogin = "user2", TopicName = "Topic 2" }
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 1", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" },
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 2", CreationDate = DateTime.Now, UserId = "user2", TopicsId = "topic2", OwnerLogin = "user2", TopicName = "Topic 2" }
         };
         await _context.Set<Idea>().AddRangeAsync(ideas);
         await _context.SaveChangesAsync();
@@ -51,8 +51,8 @@ public class IdeaRepositoryTests : IDisposable
     {
         var ideas = new List<Idea>
         {
-            new Idea { Id = "1", Title = "Idea 1", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" },
-            new Idea { Id = "2", Title = "Idea 2", CreationDate = DateTime.Now, UsersId = "user2", TopicsId = "topic2", OwnerLogin = "user2", TopicName = "Topic 2" }
+            new Idea { Id = "1", Title = "Idea 1", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" },
+            new Idea { Id = "2", Title = "Idea 2", CreationDate = DateTime.Now, UserId = "user2", TopicsId = "topic2", OwnerLogin = "user2", TopicName = "Topic 2" }
         };
         await _context.Set<Idea>().AddRangeAsync(ideas);
         await _context.SaveChangesAsync();
@@ -71,7 +71,7 @@ public class IdeaRepositoryTests : IDisposable
     public async Task GetByID_ShouldReturnCorrectIdea()
     {
         var ideaId = Guid.NewGuid();
-        var idea = new Idea { Id = ideaId.ToString(), Title = "Test Idea", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
+        var idea = new Idea { Id = ideaId.ToString(), Title = "Test Idea", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
         await _context.Set<Idea>().AddAsync(idea);
         await _context.SaveChangesAsync();
 
@@ -84,7 +84,7 @@ public class IdeaRepositoryTests : IDisposable
     [Fact]
     public async Task Insert_ShouldAddNewIdea()
     {
-        var newIdea = new Idea { Id = Guid.NewGuid().ToString(), Title = "New Idea", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
+        var newIdea = new Idea { Id = Guid.NewGuid().ToString(), Title = "New Idea", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
 
         var result = await _repository.Insert(newIdea);
 
@@ -96,7 +96,7 @@ public class IdeaRepositoryTests : IDisposable
     [Fact]
     public async Task Update_ShouldModifyExistingIdea()
     {
-        var idea = new Idea { Id = Guid.NewGuid().ToString(), Title = "Original Title", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
+        var idea = new Idea { Id = Guid.NewGuid().ToString(), Title = "Original Title", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
         await _context.Set<Idea>().AddAsync(idea);
         await _context.SaveChangesAsync();
 
@@ -112,7 +112,7 @@ public class IdeaRepositoryTests : IDisposable
     public async Task Delete_ShouldRemoveIdea()
     {
         var ideaId = Guid.NewGuid();
-        var idea = new Idea { Id = ideaId.ToString(), Title = "Idea to Delete", CreationDate = DateTime.Now, UsersId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
+        var idea = new Idea { Id = ideaId.ToString(), Title = "Idea to Delete", CreationDate = DateTime.Now, UserId = "user1", TopicsId = "topic1", OwnerLogin = "user1", TopicName = "Topic 1" };
         await _context.Set<Idea>().AddAsync(idea);
         await _context.SaveChangesAsync();
 
@@ -128,9 +128,9 @@ public class IdeaRepositoryTests : IDisposable
         var userId = "user1";
         var ideas = new List<Idea>
         {
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 1", CreationDate = DateTime.Now, UsersId = userId, TopicsId = "topic1", OwnerLogin = userId, TopicName = "Topic 1" },
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 2", CreationDate = DateTime.Now, UsersId = userId, TopicsId = "topic2", OwnerLogin = userId, TopicName = "Topic 2" },
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 3", CreationDate = DateTime.Now, UsersId = "other_user", TopicsId = "topic3", OwnerLogin = "other_user", TopicName = "Topic 3" }
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 1", CreationDate = DateTime.Now, UserId = userId, TopicsId = "topic1", OwnerLogin = userId, TopicName = "Topic 1" },
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 2", CreationDate = DateTime.Now, UserId = userId, TopicsId = "topic2", OwnerLogin = userId, TopicName = "Topic 2" },
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Idea 3", CreationDate = DateTime.Now, UserId = "other_user", TopicsId = "topic3", OwnerLogin = "other_user", TopicName = "Topic 3" }
         };
         await _context.Set<Idea>().AddRangeAsync(ideas);
         await _context.SaveChangesAsync();
@@ -146,9 +146,9 @@ public class IdeaRepositoryTests : IDisposable
         var userId = "user1";
         var ideas = new List<Idea>
         {
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "User Idea 1", CreationDate = DateTime.Now, UsersId = userId, TopicsId = "topic1", OwnerLogin = userId, TopicName = "Topic 1" },
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "User Idea 2", CreationDate = DateTime.Now, UsersId = userId, TopicsId = "topic2", OwnerLogin = userId, TopicName = "Topic 2" },
-            new Idea { Id = Guid.NewGuid().ToString(), Title = "Other Idea", CreationDate = DateTime.Now, UsersId = "other_user", TopicsId = "topic3", OwnerLogin = "other_user", TopicName = "Topic 3" }
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "User Idea 1", CreationDate = DateTime.Now, UserId = userId, TopicsId = "topic1", OwnerLogin = userId, TopicName = "Topic 1" },
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "User Idea 2", CreationDate = DateTime.Now, UserId = userId, TopicsId = "topic2", OwnerLogin = userId, TopicName = "Topic 2" },
+            new Idea { Id = Guid.NewGuid().ToString(), Title = "Other Idea", CreationDate = DateTime.Now, UserId = "other_user", TopicsId = "topic3", OwnerLogin = "other_user", TopicName = "Topic 3" }
         };
         await _context.Set<Idea>().AddRangeAsync(ideas);
         await _context.SaveChangesAsync();
@@ -156,7 +156,7 @@ public class IdeaRepositoryTests : IDisposable
         var result = await _repository.GetByUser(userId);
 
         Assert.Equal(2, result.Count());
-        Assert.All(result, idea => Assert.Equal(userId, idea.UsersId));
+        Assert.All(result, idea => Assert.Equal(userId, idea.UserId));
     }
 
     public void Dispose()

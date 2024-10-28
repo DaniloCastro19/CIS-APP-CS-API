@@ -67,7 +67,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<IEnumerable<Topic>> GetByUser(string userId)
         {
-            return await EntitySet.Where(topic => topic.UsersId == userId).ToListAsync();
+            return await EntitySet.Where(topic => topic.UserId == userId).ToListAsync();
         }
     }
 }

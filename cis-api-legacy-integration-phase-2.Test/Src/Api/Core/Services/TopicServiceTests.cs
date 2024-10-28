@@ -44,7 +44,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Services
                 Title = title,
                 Description = "Description for Topic 1",
                 OwnerLogin = "owner1",
-                UsersId = "user1",
+                UserId = "user1",
                 CreationDate = DateTime.Now
             },
             new Topic
@@ -53,7 +53,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Services
                 Title = title,
                 Description = "Description for Topic 2",
                 OwnerLogin = "owner2",
-                UsersId = "user2",
+                UserId = "user2",
                 CreationDate = DateTime.Now
             }
             };
@@ -137,7 +137,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Services
                 Title = topicDto.Title,
                 Description = topicDto.Description,
                 CreationDate = DateTime.UtcNow,
-                UsersId = userId,
+                UserId = userId,
                 OwnerLogin = user.Login
             };
 
@@ -150,7 +150,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Src.Api.Core.Services
             // Assert
             Assert.NotNull(result);
             Assert.Equal(topicDto.Title, result.Title);
-            Assert.Equal(userId, result.UsersId);
+            Assert.Equal(userId, result.UserId);
         }
 
 /*        [Fact]

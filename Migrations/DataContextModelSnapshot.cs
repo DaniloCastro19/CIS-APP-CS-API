@@ -76,7 +76,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -108,7 +108,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -138,7 +138,7 @@ namespace cis_api_legacy_integration_phase_2.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("longtext");
 

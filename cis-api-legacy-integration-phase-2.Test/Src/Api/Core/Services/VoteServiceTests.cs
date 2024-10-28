@@ -58,7 +58,7 @@ public class VoteServiceTests
 
         var user = new User { Id = userID, Login = "userLogin" };
         var idea = new Idea { Id = ideaId.ToString(), Title = "Test Idea" };
-        var newVote = new Vote { Id = Guid.NewGuid().ToString(), IsPositive = voteValue, UsersId = userID };
+        var newVote = new Vote { Id = Guid.NewGuid().ToString(), IsPositive = voteValue, UserId = userID };
         
         _mockUserService.Setup(service => service.GetUserById(userID)).ReturnsAsync(user);
         _mockIdeaService.Setup(service => service.GetByID(ideaId)).ReturnsAsync(idea);
@@ -69,7 +69,7 @@ public class VoteServiceTests
         
         Assert.NotNull(result);
         Assert.Equal(voteValue, result.IsPositive);
-        Assert.Equal(userID, result.UsersId);
+        Assert.Equal(userID, result.UserId);
     }
 
     
@@ -78,7 +78,7 @@ public class VoteServiceTests
     {
         var voteId = Guid.NewGuid();
         var userId = "user123"; 
-        var existingVote = new Vote { Id = voteId.ToString(), IsPositive = false, UsersId = userId };
+        var existingVote = new Vote { Id = voteId.ToString(), IsPositive = false, UserId = userId };
         _mockVoteRepository.Setup(repo => repo.GetByID(voteId)).ReturnsAsync(existingVote);
         
         await _voteService.Update(voteId, true, userId);
@@ -93,7 +93,7 @@ public class VoteServiceTests
         var voteId = Guid.NewGuid();
         var userId = "user123";
         
-        var existingVote = new Vote { Id = voteId.ToString(), IsPositive = false, UsersId = userId };
+        var existingVote = new Vote { Id = voteId.ToString(), IsPositive = false, UserId = userId };
         _mockVoteRepository.Setup(repo => repo.GetByID(voteId)).ReturnsAsync(existingVote);
 
         await _voteService.Delete(voteId, userId);
@@ -106,14 +106,14 @@ public class VoteServiceTests
     public async Task GetVotesByUserId_ValidUserId_ReturnsVotes()
     {
         var userId = Guid.NewGuid().ToString();
-        var votes = new List<Vote> { new Vote { Id = Guid.NewGuid().ToString(), UsersId = userId } };
+        var votes = new List<Vote> { new Vote { Id = Guid.NewGuid().ToString(), UserId = userId } };
 
         _mockVoteRepository.Setup(repo => repo.GetVotesByUserId(userId)).ReturnsAsync(votes);
         var result = await _voteService.GetVotesByUserId(Guid.Parse(userId));
         
         Assert.NotNull(result);
         Assert.Single(result);
-        Assert.Equal(userId, result.First().UsersId);
+        Assert.Equal(userId, result.First().UserId);
     }
 
 

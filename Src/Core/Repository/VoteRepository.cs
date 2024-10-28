@@ -58,7 +58,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<IEnumerable<Vote>> GetVotesByUserId(string userId)
         {
-            return await EntitySet.Where(v => v.UsersId == userId).ToListAsync();
+            return await EntitySet.Where(v => v.UserId == userId).ToListAsync();
         }
 
         public async Task<IEnumerable<Vote>> GetVotesByIdeaId(string ideaId)

@@ -36,8 +36,8 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Controllers
         {
             var votes = new List<Vote>
             {
-                new Vote { Id = "1", IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true },
-                new Vote { Id = "2", IdeasId = "idea2", IdeaName = "Name 2", UsersId = "user2", OwnerLogin = "user2", IsPositive = false }
+                new Vote { Id = "1", IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true },
+                new Vote { Id = "2", IdeasId = "idea2", IdeaName = "Name 2", UserId = "user2", OwnerLogin = "user2", IsPositive = false }
             };
             _voteServiceMock.Setup(v => v.GetAll()).ReturnsAsync(votes);
             var result = await _controller.GetAllVotes();
@@ -51,7 +51,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Controllers
         public async Task GetVoteById_ShouldReturnOkResult_WithVote()
         {
             var voteId = Guid.NewGuid();
-            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true };
+            var vote = new Vote { Id = voteId.ToString(), IdeasId = "idea1", IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true };
             _voteServiceMock.Setup(v => v.GetByID(voteId)).ReturnsAsync(vote);
             
             var result = await _controller.GetVoteById(voteId);
@@ -93,7 +93,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Controllers
             var userId = Guid.NewGuid();
             var votes = new List<Vote>
             {
-                new Vote { Id = "1", IdeasId = "idea1", IdeaName = "Name 1", UsersId = userId.ToString(), OwnerLogin = "user1", IsPositive = true }
+                new Vote { Id = "1", IdeasId = "idea1", IdeaName = "Name 1", UserId = userId.ToString(), OwnerLogin = "user1", IsPositive = true }
             };
             _voteServiceMock.Setup(v => v.GetVotesByUserId(userId)).ReturnsAsync(votes);
             
@@ -110,7 +110,7 @@ namespace cis_api_legacy_integration_phase_2.Test.Api.Controllers
             var ideaId = Guid.NewGuid();
             var votes = new List<Vote>
             {
-                new Vote { Id = "1", IdeasId = ideaId.ToString(), IdeaName = "Name 1", UsersId = "user1", OwnerLogin = "user1", IsPositive = true }
+                new Vote { Id = "1", IdeasId = ideaId.ToString(), IdeaName = "Name 1", UserId = "user1", OwnerLogin = "user1", IsPositive = true }
             };
             _voteServiceMock.Setup(v => v.GetVotesByIdeaId(ideaId)).ReturnsAsync(votes);
             

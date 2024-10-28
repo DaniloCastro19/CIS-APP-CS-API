@@ -56,7 +56,7 @@ public class MongoIdeaRepository: IIdeaRepository
 
     public async Task<IEnumerable<Idea>> GetByUser(string userId)
     {
-        return await _collection.Find(idea => idea.UsersId == userId).ToListAsync();
+        return await _collection.Find(idea => idea.UserId == userId).ToListAsync();
     }
 
     public async Task<Idea> Insert(Idea entity)

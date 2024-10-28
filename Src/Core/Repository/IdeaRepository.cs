@@ -55,7 +55,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<int> CountIdeas(string id)
         {
-            return await EntitySet.Where(idea => idea.UsersId == id).CountAsync();
+            return await EntitySet.Where(idea => idea.UserId == id).CountAsync();
         }
 
         public async Task Save()
@@ -65,7 +65,7 @@ namespace cis_api_legacy_integration_phase_2.Src.Core.Repository
 
         public async Task<IEnumerable<Idea>> GetByUser(string userId)
         {
-            return await EntitySet.Where(idea => idea.UsersId == userId).ToListAsync();
+            return await EntitySet.Where(idea => idea.UserId == userId).ToListAsync();
 
         }
 

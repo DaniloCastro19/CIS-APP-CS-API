@@ -10,7 +10,7 @@ public class Topic: IHasUserId
     public string Title { get; set; }     
     public string Description { get; set; } 
     public DateTime CreationDate { get; set; } 
-    public string UsersId { get; set; }     
+    public string UserId { get; set; }     
     
     public string OwnerLogin { get; set; }
 }

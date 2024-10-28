@@ -46,7 +46,7 @@ public class MongoTopicRepository : ITopicRepository
 
     public async Task<IEnumerable<Topic>> GetByUser(string userId)
     {
-        return await _collection.Find(topic => topic.UsersId == userId).ToListAsync();
+        return await _collection.Find(topic => topic.UserId == userId).ToListAsync();
     }
 
     public async Task<Topic> Insert(Topic entity)
