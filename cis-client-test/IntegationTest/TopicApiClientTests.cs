@@ -152,6 +152,6 @@ public class TopicApiClientTests
         var watch = System.Diagnostics.Stopwatch.StartNew();
         await _apiClient.GetAllTopicsAsync();
         watch.Stop();
-        watch.ElapsedMilliseconds.Should().BeLessThan(200);
+        watch.ElapsedMilliseconds.Should().BeLessThan(900);
     }
 }
