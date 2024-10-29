@@ -6,6 +6,7 @@ using FluentAssertions;
 using Xunit;
 using cis_api_legacy_integration_phase_2.Src.Data.DTO;
 using cis_api_legacy_integration_phase_2.Src.Core.Abstractions.Models;
+using cis_client_test.IntegationTest;
 
 public class VoteApiClientTests
 {
@@ -20,17 +21,19 @@ public class VoteApiClientTests
 
     public VoteApiClientTests()
     {
-        var baseAddress = "http://localhost:5141/";
-        var baseAddressUsers = "http://localhost:4000/";
+        var baseAddressApiCis = Constants.BASE_ADDRESS_API_CIS;
+        var baseAddressUsers = Constants.BASE_ADDRESS_API_USER;
+        var userNameApiUser = Constants.USERNAME_API_USER;
+        var passwordApiUsers = Constants.PASSWORD_API_USER;
 
         _username = $"Login_Name_{Guid.NewGuid()}";
         _password = Guid.NewGuid().ToString();
         var name = $"User_{Guid.NewGuid()}";
         
-        _userApiClient = new UserApiClient(baseAddressUsers, "root", "root");
-        _voteApiClient = new VoteApiClient(baseAddress, _username, _password);
-        _ideaApiClient = new IdeaApiClient(baseAddress, _username, _password);
-        _topicApiClient = new TopicApiClient(baseAddress, _username, _password);
+        _userApiClient = new UserApiClient(baseAddressUsers, userNameApiUser, passwordApiUsers);
+        _voteApiClient = new VoteApiClient(baseAddressApiCis, _username, _password);
+        _ideaApiClient = new IdeaApiClient(baseAddressApiCis, _username, _password);
+        _topicApiClient = new TopicApiClient(baseAddressApiCis, _username, _password);
         
         CreateUserAsync(name, _username, _password).Wait();
     }
