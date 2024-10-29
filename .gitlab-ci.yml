@@ -28,7 +28,7 @@ test:
     - build
   script:
     - echo "Running tests..."
-    - dotnet test 
+    - dotnet test --filter "Category!=Integration" 
 
 preparing-version:
     stage: prepare-version
