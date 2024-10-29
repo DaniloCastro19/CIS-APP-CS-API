@@ -62,6 +62,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateVote_DataIntegrity()
     {
         await InitializeAsync();
@@ -76,6 +77,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetVoteById_Connectivity()
     {
         await InitializeAsync();
@@ -90,6 +92,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllVotes_Structure()
     {
         await InitializeAsync();
@@ -101,6 +104,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetVotesByIdeaId_Structure()
     {
         await InitializeAsync();
@@ -114,6 +118,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateAndGetVote_Functionality()
     {
         await InitializeAsync();
@@ -128,6 +133,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_DeleteVote_Functionality()
     {
         await InitializeAsync();
@@ -142,6 +148,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllVotes_Performance()
     {
         await InitializeAsync();
@@ -155,6 +162,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_UpdateVote_DataIntegrity()
     {
         await InitializeAsync();
@@ -170,6 +178,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CountPositiveVotesByIdeaId_Functionality()
     {
         await InitializeAsync();
@@ -183,6 +192,7 @@ public class VoteApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CountNegativeVotesByIdeaId_Functionality()
     {
         await InitializeAsync();

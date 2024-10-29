@@ -57,6 +57,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateIdea_DataIntegrity()
     {
         await InitializeAsync();
@@ -73,6 +74,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetIdeaById_Connectivity()
     {
         await InitializeAsync();
@@ -88,6 +90,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllIdeas_Structure()
     {
         await InitializeAsync();
@@ -99,6 +102,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetIdeaById_Structure()
     {
         await InitializeAsync();
@@ -114,6 +118,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateAndGetIdea_Functionality()
     {
         await InitializeAsync();
@@ -129,6 +134,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_DeleteIdea_Functionality()
     {
         await InitializeAsync();
@@ -144,6 +150,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllIdeas_Performance()
     {
         await InitializeAsync();
@@ -157,6 +164,7 @@ public class IdeaApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_UpdateIdea_DataIntegrity()
     {
         await InitializeAsync();
@@ -177,6 +185,7 @@ public class IdeaApiClientTests
     
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_UpdateIdea_NoChanges_Functionality()
     {
         await InitializeAsync();
@@ -195,6 +204,7 @@ public class IdeaApiClientTests
     }
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateMultipleIdeas_Performance()
     {
         await InitializeAsync();

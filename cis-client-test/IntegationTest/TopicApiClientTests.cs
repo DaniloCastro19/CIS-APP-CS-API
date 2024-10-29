@@ -41,6 +41,7 @@ public class TopicApiClientTests
     }
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllTopics_Connectivity()
     {
         var topics = await _apiClient.GetAllTopicsAsync();
@@ -48,6 +49,7 @@ public class TopicApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetTopicById_Connectivity()
     {
         var topicDto = new TopicDTO { Title = "Test Topic", Description = "This is a test topic." };
@@ -60,6 +62,7 @@ public class TopicApiClientTests
     }
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllTopics_Structure()
     {
         var topics = await _apiClient.GetAllTopicsAsync();
@@ -67,6 +70,7 @@ public class TopicApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetTopicById_Structure()
     {
         var topicDto = new TopicDTO { Title = "Test Topic", Description = "This is a test topic." };
@@ -80,6 +84,7 @@ public class TopicApiClientTests
     
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateTopic_DataIntegrity()
     {
         var topicDto = new TopicDTO { Title = "Test Topic", Description = "This is a test topic." };
@@ -94,6 +99,7 @@ public class TopicApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetTopicById_DataIntegrity()
     {
         var topicDto = new TopicDTO { Title = "Test Topic", Description = "This is a test topic." };
@@ -109,6 +115,7 @@ public class TopicApiClientTests
 
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_CreateAndGetTopic_Functionality()
     {
         var topicDto = new TopicDTO { Title = "Functional Test Topic", Description = "Testing functionality." };
@@ -120,6 +127,7 @@ public class TopicApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_UpdateTopic_Functionality()
     {
         var topicDto = new TopicDTO { Title = "Original Title", Description = "Original description." };
@@ -136,6 +144,7 @@ public class TopicApiClientTests
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_DeleteTopic_Functionality()
     {
         var topicDto = new TopicDTO { Title = "Test Topic", Description = "This topic will be deleted." };
@@ -147,6 +156,7 @@ public class TopicApiClientTests
     }
     
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Test_GetAllTopics_Performance()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
